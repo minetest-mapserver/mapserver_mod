@@ -3,12 +3,13 @@ dofile(MP .. "/bridge/defaults.lua")
 dofile(MP .. "/bridge/players.lua")
 dofile(MP .. "/bridge/advtrains.lua")
 dofile(MP .. "/bridge/minecart.lua")
+dofile(MP .. "/bridge/locator.lua")
 
 
 -- mapserver http bridge
 local has_advtrains = minetest.get_modpath("advtrains")
 local has_minecart = minetest.get_modpath("minecart")
-
+local has_locator = minetest.get_modpath("locator")
 
 local http, url, key
 
@@ -29,6 +30,11 @@ function send_stats()
   if has_advtrains then
     -- send trains if 'advtrains' mod installed
     mapserver.bridge.add_advtrains(data)
+  end
+
+  if has_locator then
+	-- send locator beacons
+	mapserver.bridge.add_locators(data)
   end
 
 
