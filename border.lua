@@ -31,7 +31,7 @@ minetest.register_node("mapserver:border", {
 	},
 	groups = {cracky=3,oddly_breakable_by_hand=3},
 	sounds = default.node_sound_glass_defaults(),
-	can_dig = mapserver.can_dig,
+	can_dig = mapserver.can_interact,
 	after_place_node = mapserver.after_place_node,
 
 	on_construct = function(pos)
