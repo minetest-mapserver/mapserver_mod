@@ -5,7 +5,7 @@ local last_name = ""
 local update_formspec = function(meta)
 	local name = meta:get_string("name")
 	local index = meta:get_string("index")
-	local color = meta:get_string("color") or "rgb(10,10,200)"
+	local color = meta:get_string("color") or ""
 
 	meta:set_string("infotext", "Border: Name=" .. name .. ", Index=" .. index)
 
@@ -39,7 +39,7 @@ minetest.register_node("mapserver:border", {
 
 		last_index = last_index + 5
 
-		meta:set_string("color", "rgb(10,10,200)")
+		meta:set_string("color", "")
 		meta:set_string("name", last_name)
 		meta:set_int("index", last_index)
 
