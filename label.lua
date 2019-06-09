@@ -13,7 +13,7 @@ local update_formspec = function(meta)
 		"button_exit[4,1;4,1;save;Save]" ..
 
 		-- col 2
-		"field[0,2.5;4,1;size;Size (1-10);" .. size .. "]" ..
+		"field[0,2.5;4,1;size;Size (1-200);" .. size .. "]" ..
 
 		-- col 3
 		"field[0,3.5;8,1;direction;Direction (0-360);" .. direction .. "]" ..
