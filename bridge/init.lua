@@ -61,7 +61,7 @@ function send_stats()
     end
 
     -- TODO: error-handling
-    minetest.after(2, send_stats)
+    minetest.after(mapserver.send_interval, send_stats)
   end)
 
 end
@@ -71,5 +71,5 @@ function mapserver.bridge_init(_http, _url, _key)
   url = _url
   key = _key
 
-  minetest.after(2, send_stats)
+  minetest.after(mapserver.send_interval, send_stats)
 end

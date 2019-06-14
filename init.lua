@@ -1,6 +1,7 @@
 
 mapserver = {
-	enable_crafting = minetest.settings:get("mapserver.enable_crafting"),
+	enable_crafting = minetest.settings:get("mapserver.enable_crafting") == "true",
+	send_interval = tonumber(minetest.settings:get("mapserver.send_interval")) or 2,
 
 	bridge = {}
 }
