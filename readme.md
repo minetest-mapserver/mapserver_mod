@@ -3,6 +3,10 @@
 
 This is the complementary mod for the mapserver: https://github.com/thomasrudin-mt/mapserver
 
+## Documentation
+
+See: https://github.com/thomasrudin-mt/mapserver/blob/master/doc/mod.md
+
 ## example for active mode configuration
 
 minetest.conf
