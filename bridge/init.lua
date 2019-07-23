@@ -50,7 +50,7 @@ function send_stats()
   http.fetch({
     url = url .. "/api/minetest",
     extra_headers = { "Content-Type: application/json", "Authorization: " .. key },
-    timeout = 1,
+    timeout = 5,
     post_data = json
   }, function(res)
 
