@@ -1,7 +1,11 @@
 
 # mapserver mod
 
-This is the complementary mod for the mapserver: https://github.com/thomasrudin-mt/mapserver
+This is the complementary mod for the mapserver: https://github.com/minetest-tools/mapserver
+
+## Documentation
+
+See: https://github.com/minetest-tools/mapserver/blob/master/doc/mod.md
 
 ## example for active mode configuration
 
