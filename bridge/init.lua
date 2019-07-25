@@ -47,6 +47,11 @@ function send_stats()
     minetest.log("warning", "[mapserver-bridge] processing took " .. process_time .. " us")
   end
 
+  local size = string.len(json)
+  if size > 256000 then
+    minetest.log("warning", "[mapserver-bridge] json-size is " .. size .. " bytes")
+  end
+
   http.fetch({
     url = url .. "/api/minetest",
     extra_headers = { "Content-Type: application/json", "Authorization: " .. key },
