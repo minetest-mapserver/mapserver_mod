@@ -10,6 +10,26 @@ dofile(MP .. "/bridge/locator.lua")
 local has_advtrains = minetest.get_modpath("advtrains")
 local has_minecart = minetest.get_modpath("minecart")
 local has_locator = minetest.get_modpath("locator")
+local has_monitoring = minetest.get_modpath("monitoring")
+
+local metric_post_size
+local metric_processing_post_time
+local metric_post_time
+
+if has_monitoring then
+	metric_post_size = monitoring.counter(
+		"mapserver_mod_post_size",
+		"size in bytes of post data"
+	)
+	metric_processing_post_time = monitoring.counter(
+		"mapserver_mod_processing_post_time",
+		"time usage in microseconds for processing post data"
+	)
+	metric_post_time = monitoring.counter(
+		"mapserver_mod_post_time",
+		"time usage in microseconds for post data"
+	)
+end
 
 local http, url, key
 
@@ -63,6 +83,12 @@ function send_stats()
     local post_time = t2 - t1
     if post_time > 1000000 then -- warn if over a second
       minetest.log("warning", "[mapserver-bridge] post took " .. post_time .. " us")
+    end
+
+    if has_monitoring then
+	    metric_post_size.inc(size)
+	    metric_processing_post_time.inc(process_time)
+	    metric_post_time.inc(post_time)
     end
 
     -- TODO: error-handling
