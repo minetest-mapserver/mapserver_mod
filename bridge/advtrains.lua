@@ -1,5 +1,6 @@
 
 mapserver.bridge.add_advtrains = function(data)
+  -- train/wagon data
   data.trains = {}
   for _, train in pairs(advtrains.trains) do
 
@@ -26,6 +27,20 @@ mapserver.bridge.add_advtrains = function(data)
     end
 
     table.insert(data.trains, t)
+  end
+
+  -- signal data
+  data.signals = {}
+  local ildb = advtrains.interlocking.db.save()
+  for _, entry in pairs(ildb.tcbs) do
+    local tcb = entry[1]
+    if tcb.signal then
+      local green = tcb.aspect and tcb.aspect.main and tcb.aspect.main.free
+      table.insert(data.signals, {
+	      pos = tcb.signal,
+	      green = green
+      })
+    end
   end
 
 end
