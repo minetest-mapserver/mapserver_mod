@@ -1,6 +1,8 @@
 
 # mapserver mod
 
+<img src="https://travis-ci.com/minetest-tools/mapserver_mod.svg?branch=master"></img>
+
 This is the complementary mod for the mapserver: https://github.com/minetest-tools/mapserver
 
 ## Documentation
