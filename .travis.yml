@@ -6,6 +6,6 @@ addons:
 before_install:
   - luarocks install --local luacheck
 script:
-- $HOME/.luarocks/bin/luacheck ./mods
+- $HOME/.luarocks/bin/luacheck ./
 notifications:
   email: false
