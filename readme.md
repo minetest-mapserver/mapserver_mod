@@ -1,7 +1,7 @@
 
 # mapserver mod
 
-<img src="https://travis-ci.com/minetest-tools/mapserver_mod.svg?branch=master"></img>
+[![Build Status](https://travis-ci.com/minetest-tools/mapserver_mod.svg?branch=master)](https://travis-ci.com/minetest-tools/mapserver_mod)
 
 This is the complementary mod for the mapserver: https://github.com/minetest-tools/mapserver
 
