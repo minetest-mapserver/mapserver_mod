@@ -20,8 +20,33 @@ dofile(MP.."/privs.lua")
 local http = minetest.request_http_api()
 
 if http then
+	-- check if the mapserver.json is in the world-folder
+	local path = minetest.get_worldpath().."/mapserver.json";
+	local mapserver_cfg
+
+	local file = io.open( path, "r" );
+	if file then
+		local json = file:read("*all");
+		mapserver_cfg = minetest.parse_json(json);
+		file:close();
+		print("[Mapserver] read settings from 'mapserver.json'")
+	end
+
+	print(dump(mapserver_cfg))
+
 	local mapserver_url = minetest.settings:get("mapserver.url")
 	local mapserver_key = minetest.settings:get("mapserver.key")
+
+	if mapserver_cfg and mapserver_cfg.webapi then
+		if not mapserver_key then
+			-- apply key from json
+			mapserver_key = mapserver_cfg.webapi.secretkey
+		end
+		if not mapserver_url then
+			-- assemble url from json
+			mapserver_url = "http://127.0.0.1:" .. mapserver_cfg.port
+		end
+	end
 
 	if not mapserver_url then error("mapserver.url is not defined") end
 	if not mapserver_key then error("mapserver.key is not defined") end
