@@ -65,7 +65,7 @@ local register_poi = function(color, dye)
 	})
 
 
-	if mapserver.enable_crafting then
+	if mapserver.enable_crafting and minetest.get_modpath("dye") then
 		minetest.register_craft({
 		    output = 'mapserver:poi_' .. color,
 		    recipe = {

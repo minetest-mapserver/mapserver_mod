@@ -74,7 +74,7 @@ minetest.register_node("mapserver:train", {
 	end
 })
 
-if mapserver.enable_crafting then
+if mapserver.enable_crafting and minetest.get_modpath("default") then
 	minetest.register_craft({
 	    output = 'mapserver:train',
 	    recipe = {

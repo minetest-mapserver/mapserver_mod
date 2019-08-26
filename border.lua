@@ -69,7 +69,7 @@ minetest.register_node("mapserver:border", {
 	end
 })
 
-if mapserver.enable_crafting then
+if mapserver.enable_crafting and minetest.get_modpath("default") then
 	minetest.register_craft({
 	    output = 'mapserver:border',
 	    recipe = {
