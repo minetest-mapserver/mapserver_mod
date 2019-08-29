@@ -22,11 +22,9 @@ local update_formspec = function(meta)
 		"field[0,4.5;8,1;color;Color;" .. color .. "]" ..
 
 		"")
-
 end
 
-
-minetest.register_node("mapserver:label", {
+local nodedef = {
 	description = "Mapserver Label",
 	tiles = {
 		"mapserver_label.png"
@@ -64,7 +62,28 @@ minetest.register_node("mapserver:label", {
 
 		update_formspec(meta)
 	end
-})
+}
+
+
+minetest.register_node("mapserver:label", table.copy(nodedef))
+
+nodedef.description = "Mapserver Label (Logo)"
+nodedef.wield_image = "mapserver_label.png"
+nodedef.inventory_image = "mapserver_label.png"
+nodedef.paramtype2 = "wallmounted"
+nodedef.legacy_wallmounted = true
+nodedef.drawtype = "nodebox"
+nodedef.sunlight_propagates = true
+nodedef.walkable = true
+nodedef.node_box = {
+	type = "wallmounted",
+	wall_top    = {-0.375, 0.4375, -0.5, 0.375, 0.5, 0.5},
+	wall_bottom = {-0.375, -0.5, -0.5, 0.375, -0.4375, 0.5},
+	wall_side   = {-0.5, -0.5, -0.375, -0.4375, 0.5, 0.375},
+}
+nodedef.selection_box = {type = "wallmounted"}
+
+minetest.register_node("mapserver:label_logo", table.copy(nodedef))
 
 if mapserver.enable_crafting and minetest.get_modpath("default") then
 	minetest.register_craft({
@@ -74,5 +93,17 @@ if mapserver.enable_crafting and minetest.get_modpath("default") then
 				{"default:paper", "default:goldblock", "default:paper"},
 				{"", "default:glass", ""}
 			}
+	})
+
+	minetest.register_craft({
+		type = "shapeless",
+		output = "mapserver:label",
+		recipe = {"mapserver:label_logo"}
+	})
+
+	minetest.register_craft({
+		type = "shapeless",
+		output = "mapserver:label_logo",
+		recipe = {"mapserver:label"}
 	})
 end
