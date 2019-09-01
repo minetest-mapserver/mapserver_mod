@@ -32,8 +32,6 @@ if http then
 		print("[Mapserver] read settings from 'mapserver.json'")
 	end
 
-	print(dump(mapserver_cfg))
-
 	local mapserver_url = minetest.settings:get("mapserver.url")
 	local mapserver_key = minetest.settings:get("mapserver.key")
 
