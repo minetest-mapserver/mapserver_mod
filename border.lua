@@ -73,7 +73,7 @@ if mapserver.enable_crafting and minetest.get_modpath("default") then
 	minetest.register_craft({
 	    output = 'mapserver:border',
 	    recipe = {
-				{"", "default:steel_ingot", ""},
+				{"", "default:steelblock", ""},
 				{"default:paper", "default:goldblock", "default:paper"},
 				{"", "default:glass", ""}
 			}
