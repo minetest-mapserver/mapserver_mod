@@ -12,6 +12,6 @@ jobs:
     - name: apt
       run: sudo apt-get install -y luarocks
     - name: luacheck install
-      run: sudo luarocks install --local luacheck
+      run: luarocks install --local luacheck
     - name: luacheck run
       run: $HOME/.luarocks/bin/luacheck ./
