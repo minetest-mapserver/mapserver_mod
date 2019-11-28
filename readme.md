@@ -1,7 +1,7 @@
 
 # mapserver mod
 
-[![Build Status](https://travis-ci.com/minetest-tools/mapserver_mod.svg?branch=master)](https://travis-ci.com/minetest-tools/mapserver_mod)
+![](https://github.com/minetest-mapserver/mapserver_mod/workflows/luacheck/badge.svg)
 
 This is the complementary mod for the mapserver: https://github.com/minetest-tools/mapserver
 
