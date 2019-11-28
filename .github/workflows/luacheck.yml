@@ -10,8 +10,8 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: apt
-      run: apt-get install -y luarocks
+      run: sude apt-get install -y luarocks
     - name: luacheck install
-      run: luarocks install --local luacheck
+      run: sudo luarocks install --local luacheck
     - name: luacheck run
       run: $HOME/.luarocks/bin/luacheck ./
