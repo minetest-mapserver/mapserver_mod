@@ -25,72 +25,166 @@ local FORMNAME = "mapserver_mod_search_results"
 
 --]]
 
+-- playername -> {}
+local search_results = {}
+
+minetest.register_on_leaveplayer(function(player)
+	search_results[player:get_player_name()] = nil
+end)
+
+minetest.register_on_player_receive_fields(function(player, formname, fields)
+	if formname ~= FORMNAME then
+		return
+	end
+
+	local selected_item = 0
+
+	if fields.items then
+		local parts = fields.items:split(":")
+		if parts[1] == "CHG" then
+			selected_item = tonumber(parts[2]) - 1
+		end
+	end
+
+	if selected_item > 0 then
+		local data = search_results[player:get_player_name()]
+		local item = data[selected_item]
+
+		print( dump(item) )
+	end
+
+end)
+
 
 local function show_formspec(playername, data)
-
 	local list = ""
+	local player = minetest.get_player_by_name(playername)
 
+	if not player then
+		return
+	end
+
+	local player_pos = player:get_pos()
+
+	-- populate pos and distance field
+	for i, item in ipairs(data) do
+		item.pos = {x=item.x, y=item.y, z=item.z}
+		item.distance = math.floor(vector.distance(item.pos, player_pos))
+	end
+
+	-- sort by distance
+	table.sort(data, function(a,b)
+		return a.distance < b.distance
+	end)
+
+	-- store as last result
+	search_results[playername] = data
+
+	-- render list items
 	for _, item in ipairs(data) do
-		local name = item.type
-		local coords = item.x .. "/" .. item.y .. "/" .. item.z
-		local description = "Desc"
+		local owner = item.attributes.owner
+		local distance = math.floor(item.distance) .. " m"
+		local coords = item.pos.x .. "/" .. item.pos.y .. "/" .. item.pos.z
+		local description = ""
+		local color = "#FFFFFF"
 
-		list = list .. ",#FFD700," .. name .. "," .. coords .. "," .. description
+		if item.type == "bones" then
+			-- bone
+			description = minetest.formspec_escape((item.attributes.info or "?") ..
+				" items: " .. (item.attributes.item_count or "?"))
+
+		elseif item.type == "shop" then
+			-- shop
+			description = minetest.formspec_escape("Shop, trading " ..
+				item.attributes.in_count .. "x " .. item.attributes.in_item ..
+				" for " .. item.attributes.out_count .. "x " .. item.attributes.out_item ..
+				" Stock: " .. item.attributes.stock)
+
+			if item.attributes.stock == "0" then
+				color = "#FF0000"
+			end
+
+		end
+
+		list = list .. "," .. color .. "," .. distance .. "," .. owner .. "," .. coords .. "," .. description
 
 	end
 
 	list = list .. ";]"
 
 		local formspec = [[
-				size[8,12;]
-				label[0,0;Search results] ..
-				button_exit[0,12;4,1;show;Show]
-				tablecolumns[color;text;text;text]
-				table[0,0;8,10;messages;#999,Type,Coords,Description
-		]] .. list
+				size[16,12;]
+				label[0,0;Search results (]] .. #data .. [[)]
+				button_exit[0,11;4,1;show;Show]
+				button_exit[4,11;4,1;teleport;Teleport]
+				button_exit[12,11;4,1;exit;Exit]
+				tablecolumns[color;text;text;text;text]
+				table[0,1;15.7,10;items;#999,Distance,Owner,Coords,Description]] .. list
 
 		minetest.show_formspec(playername, FORMNAME, formspec)
 end
 
-function mapserver.search_init(http, url)
-	minetest.register_chatcommand("search", {
-		func = function(name, query)
+-- valid search types
+local valid_types = {
+	shop = true,
+	bones = true
+}
 
-			local json = "{"
+-- global values, passed by init
+local http, url
 
-			json = json .. '"pos1": {"x":-2048, "y":-2048, "z":-2048},'
-			json = json .. '"pos2": {"x":2048, "y":2048, "z":2048},'
-			json = json .. '"type":"shop",'
+-- chatcommand
+minetest.register_chatcommand("search", {
+	func = function(playername, param)
 
+		local _, _, type, query = string.find(param, "^([^%s]+)%s+([^%s]+)%s*$")
+		if type == nil or query == nil or not valid_types[type] then
+			minetest.chat_send_player(playername, "syntax: /search [bones|shop] [<query>|*]")
+			return
+		end
+
+		local json = "{"
+
+		json = json .. '"pos1": {"x":-2048, "y":-2048, "z":-2048},'
+		json = json .. '"pos2": {"x":2048, "y":2048, "z":2048},'
+		json = json .. '"type":"' .. type .. '"'
+
+		if query and query ~= "*" then
+			json = json .. ','
 			json = json .. '"attributelike":{'
 			json = json .. '"key":"out_item",'
 			json = json .. '"value":"%' .. query .. '%"'
 			json = json .. "}"
-
-			json = json .. "}"
-
-			http.fetch({
-		    url = url .. "/api/mapobjects/",
-		    timeout = 10,
-				extra_headers = { "Content-Type: application/json" },
-		    post_data = json
-		  }, function(res)
-				if res.code == 200 then
-					local data = minetest.parse_json(res.data)
-					if data and #data > 0 then
-						print( dump(data) ) --XXX
-						show_formspec(name, data)
-					else
-						minetest.chat_send_player(name, "Query failed, no results!")
-					end
-				else
-					minetest.chat_send_player(name, "Query failed, http-status: " .. (res.status or "<none>"))
-				end
-		  end)
-
-
-
-			return true, "Searching for: '" .. query .. "' ..."
 		end
-	})
+
+		json = json .. "}"
+
+		http.fetch({
+	    url = url .. "/api/mapobjects/",
+	    timeout = 10,
+			extra_headers = { "Content-Type: application/json" },
+	    post_data = json
+	  }, function(res)
+			if res.code == 200 then
+				local data = minetest.parse_json(res.data)
+				if data and #data > 0 then
+					minetest.chat_send_player(playername, "Got " .. #data .. " results")
+					show_formspec(playername, data)
+				else
+					minetest.chat_send_player(playername, "Query failed, no results!")
+				end
+			else
+				minetest.chat_send_player(playername, "Query failed, http-status: " .. (res.status or "<none>"))
+			end
+	  end)
+
+
+
+		return true, "Searching for: " .. type .. " '" .. query .. "' ..."
+	end
+})
+
+function mapserver.search_init(_http, _url)
+	http = _http
+	url = _url
 end
