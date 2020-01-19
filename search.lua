@@ -60,20 +60,20 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 
 	local item = selected_item_data[playername]
 
-	print(dump(item))
-
 	if fields.teleport then
 		if not minetest.check_player_privs(playername, "teleport") then
 			minetest.chat_send_player(playername, "Missing priv: 'teleport'")
 			return
 		end
 
-		local nodes = minetest.find_node_near(item.pos, 2, "air")
+		local pos1 = vector.subtract(item.pos, {x=1, y=0, z=1})
+		local pos2 = vector.add(item.pos, {x=1, y=0, z=1})
 
-		print( dump(nodes) )
+		local nodes = minetest.find_nodes_in_area(pos1, pos2, "air")
 
 		if #nodes > 0 then
 			player:set_pos(nodes[1])
+			minetest.sound_play("whoosh", {pos = nodes[1], gain = 0.5, max_hear_distance = 10})
 		end
 	elseif fields.show then
 		mapserver.show_waypoint(playername, item.pos, item.description, 60)
@@ -122,18 +122,17 @@ local function show_formspec(playername, data)
 		elseif item.type == "shop" then
 			-- shop
 			description = minetest.formspec_escape("Shop, trading " ..
-				item.attributes.in_count .. "x " .. item.attributes.in_item ..
-				" for " .. item.attributes.out_count .. "x " .. item.attributes.out_item ..
+				item.attributes.out_count .. "x " .. item.attributes.out_item ..
+				" for " .. item.attributes.in_count .. "x " .. item.attributes.in_item ..
 				" Stock: " .. item.attributes.stock)
 
 			if item.attributes.stock == "0" then
 				color = "#FF0000"
 			end
-
-			-- save description
-			item.description = description
-
 		end
+
+		-- save description
+		item.description = description
 
 		list = list .. "," .. color .. "," .. distance .. "," .. owner .. "," .. coords .. "," .. description
 

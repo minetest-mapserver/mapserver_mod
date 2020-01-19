@@ -22,3 +22,5 @@ mapserver.key = myserverkey
 
 * Source code: MIT
 * Textures: CC BY-SA 3.0 (unless otherwise noted)
+* Sounds
+  * whoosh.ogg: https://github.com/ChaosWormz/teleport-request
