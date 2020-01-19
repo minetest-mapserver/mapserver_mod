@@ -1,30 +1,5 @@
 local FORMNAME = "mapserver_mod_search_results"
 
---[[
-{
-	x = -107,
-	mtime = 1579447326,
-	mapblock = {
-		y = 0,
-		x = -7,
-		z = -4
-	},
-	attributes = {
-		in_item = "mapserver:train",
-		out_count = "1",
-		type = "fancyvend",
-		stock = "0",
-		owner = "BuckarooBanzai",
-		in_count = "1",
-		out_item = "fancy_vend:player_vendor"
-	},
-	y = 4,
-	z = -52,
-	type = "shop"
-}
-
---]]
-
 -- playername -> {}
 local search_results = {}
 
