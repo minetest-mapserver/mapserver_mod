@@ -14,7 +14,8 @@ dofile(MP.."/label.lua")
 dofile(MP.."/border.lua")
 dofile(MP.."/legacy.lua")
 dofile(MP.."/privs.lua")
-dofile(MP .."/search.lua")
+dofile(MP.."/show_waypoint.lua")
+dofile(MP.."/search.lua")
 
 
 -- optional mapserver-bridge stuff below

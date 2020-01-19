@@ -28,8 +28,12 @@ local FORMNAME = "mapserver_mod_search_results"
 -- playername -> {}
 local search_results = {}
 
+-- playername = <item>
+local selected_item_data = {}
+
 minetest.register_on_leaveplayer(function(player)
 	search_results[player:get_player_name()] = nil
+	selected_item_data[player:get_player_name()] = nil
 end)
 
 minetest.register_on_player_receive_fields(function(player, formname, fields)
@@ -38,6 +42,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	end
 
 	local selected_item = 0
+	local playername = player:get_player_name()
 
 	if fields.items then
 		local parts = fields.items:split(":")
@@ -47,10 +52,31 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	end
 
 	if selected_item > 0 then
-		local data = search_results[player:get_player_name()]
+		local data = search_results[playername]
 		local item = data[selected_item]
 
-		print( dump(item) )
+		selected_item_data[playername] = item
+	end
+
+	local item = selected_item_data[playername]
+
+	print(dump(item))
+
+	if fields.teleport then
+		if not minetest.check_player_privs(playername, "teleport") then
+			minetest.chat_send_player(playername, "Missing priv: 'teleport'")
+			return
+		end
+
+		local nodes = minetest.find_node_near(item.pos, 2, "air")
+
+		print( dump(nodes) )
+
+		if #nodes > 0 then
+			player:set_pos(nodes[1])
+		end
+	elseif fields.show then
+		mapserver.show_waypoint(playername, item.pos, item.description, 60)
 	end
 
 end)
@@ -103,6 +129,9 @@ local function show_formspec(playername, data)
 			if item.attributes.stock == "0" then
 				color = "#FF0000"
 			end
+
+			-- save description
+			item.description = description
 
 		end
 
