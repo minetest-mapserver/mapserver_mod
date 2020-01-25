@@ -130,7 +130,8 @@ end
 -- valid search types
 local valid_types = {
 	shop = true,
-	bones = true
+	bones = true,
+	poi = true
 }
 
 -- global values, passed by init
