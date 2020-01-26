@@ -109,7 +109,7 @@ local function show_formspec(playername, data)
 		-- save description
 		item.description = description
 
-		list = list .. "," .. color .. "," .. distance .. "," .. owner .. "," .. coords .. "," .. description
+		list = list .. "," .. color .. "," .. distance .. "," .. (owner or "?") .. "," .. coords .. "," .. description
 
 	end
 
