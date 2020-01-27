@@ -34,6 +34,9 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	end
 
 	local item = selected_item_data[playername]
+	if not item then
+		return
+	end
 
 	if fields.teleport then
 		if not minetest.check_player_privs(playername, "teleport") then
