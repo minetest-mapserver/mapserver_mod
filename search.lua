@@ -89,17 +89,23 @@ local function show_formspec(playername, data)
 		local description = ""
 		local color = "#FFFFFF"
 
+		-- don't trust any values in attributes, they might not be present
 		if item.type == "bones" then
 			-- bone
-			description = minetest.formspec_escape((item.attributes.info or "?") ..
-				" items: " .. (item.attributes.item_count or "?"))
+			description = minetest.formspec_escape(
+				(item.attributes.info or "?") ..
+				" items: " .. (item.attributes.item_count or "?")
+			)
 
 		elseif item.type == "shop" then
 			-- shop
-			description = minetest.formspec_escape("Shop, trading " ..
-				item.attributes.out_count .. "x " .. item.attributes.out_item ..
-				" for " .. item.attributes.in_count .. "x " .. item.attributes.in_item ..
-				" Stock: " .. item.attributes.stock)
+			description = minetest.formspec_escape("Shop, " ..
+				"trading " .. (item.attributes.out_count or "?") ..
+				"x " .. (item.attributes.out_item or "?") ..
+				" for " .. (item.attributes.in_count or "?") ..
+				"x " .. (item.attributes.in_item or "?") ..
+				" Stock: " .. (item.attributes.stock or "?")
+			)
 
 			if item.attributes.stock == "0" then
 				color = "#FF0000"
