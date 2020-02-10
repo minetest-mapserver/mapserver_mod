@@ -124,11 +124,18 @@ local function show_formspec(playername, data)
 
 	list = list .. ";]"
 
+	local teleport_button = ""
+
+	-- show teleport button
+	if minetest.check_player_privs(playername, "teleport") then
+		teleport_button = "button_exit[4,11;4,1;teleport;Teleport]"
+	end
+
 		local formspec = [[
 				size[16,12;]
 				label[0,0;Search results (]] .. #data .. [[)]
 				button_exit[0,11;4,1;show;Show]
-				button_exit[4,11;4,1;teleport;Teleport]
+				]] .. teleport_button .. [[
 				button_exit[12,11;4,1;exit;Exit]
 				tablecolumns[color;text;text;text;text]
 				table[0,1;15.7,10;items;#999,Distance,Owner,Coords,Description]] .. list
