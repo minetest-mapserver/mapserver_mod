@@ -17,6 +17,10 @@ dofile(MP.."/privs.lua")
 dofile(MP.."/show_waypoint.lua")
 dofile(MP.."/search.lua")
 
+if minetest.get_modpath("bones") then
+	dofile(MP.."/bones.lua")
+end
+
 
 -- optional mapserver-bridge stuff below
 local http = minetest.request_http_api()
