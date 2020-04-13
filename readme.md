@@ -2,6 +2,7 @@
 # mapserver mod
 
 ![](https://github.com/minetest-mapserver/mapserver_mod/workflows/luacheck/badge.svg)
+![](https://github.com/minetest-mapserver/mapserver_mod/workflows/integration-test/badge.svg)
 
 This is the complementary mod for the mapserver: https://github.com/minetest-tools/mapserver
 
