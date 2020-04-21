@@ -15,6 +15,6 @@ minetest.override_item("bones:bones", {
 		meta:set_string("_owner", meta:get_string("owner"))
 
 		-- call original function
-		bones_on_timer(pos, elapsed)
+		return bones_on_timer(pos, elapsed)
 	end
 })
