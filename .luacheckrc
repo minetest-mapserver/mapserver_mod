@@ -2,7 +2,8 @@ unused_args = false
 allow_defined_top = true
 
 globals = {
-	"mapserver"
+	"mapserver",
+	"moditems"
 }
 
 read_globals = {
@@ -20,5 +21,6 @@ read_globals = {
 	"minecart", locator = { fields = { "beacons" } },
 
 	-- optional mods
-	"xban", "monitoring"
+	"xban", "monitoring",
+	"mcl_core", "mcl_sounds"
 }

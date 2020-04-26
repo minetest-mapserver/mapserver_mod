@@ -1,5 +1,5 @@
-local default_path = core.get_modpath("default") and default
-local mineclone_path = core.get_modpath("mcl_core") and mcl_core
+local default_path = minetest.get_modpath("default") and default
+local mineclone_path = minetest.get_modpath("mcl_core") and mcl_core
 
 moditems = {}
 
