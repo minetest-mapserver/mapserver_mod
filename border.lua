@@ -73,7 +73,7 @@ if mapserver.enable_crafting then
 	minetest.register_craft({
 	    output = 'mapserver:border',
 	    recipe = {
-				{"", moditems:steelblock, ""},
+				{"", moditems.steelblock, ""},
 				{moditems.paper, moditems.goldblock, moditems.paper},
 				{"", moditems.glass, ""}
 			}
