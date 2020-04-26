@@ -1,4 +1,3 @@
-
 local default_path = core.get_modpath("default") and default
 local mineclone_path = core.get_modpath("mcl_core") and mcl_core
 
@@ -6,8 +5,20 @@ moditems = {}
 
 if mineclone_path then
 	moditems.sound_glass = mcl_sounds.node_sound_glass_defaults
+	moditems.goldblock = "mcl_core:goldblock"
+	moditems.steelblock = "mcl_core:ironblock"
+	moditems.steel_ingot = "mcl_core:iron_ingot"
+	moditems.paper = "mcl_core:paper"
+	moditems.glass = "mcl_core:glass"
+	moditems.dye = "mcl_dye:"
 else
 	moditems.sound_glass = default.node_sound_glass_defaults
+	moditems.goldblock = "default:goldblock"
+	moditems.steelblock = "default:steelblock"
+	moditems.steel_ingot = "default:steel_ingot"
+	moditems.paper = "default:paper"
+	moditems.glass = "default:glass"
+	moditems.dye = "dye:"
 end
 
 mapserver = {

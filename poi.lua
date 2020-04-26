@@ -65,13 +65,13 @@ local register_poi = function(color, dye)
 	})
 
 
-	if mapserver.enable_crafting and minetest.get_modpath("dye") then
+	if mapserver.enable_crafting and (minetest.get_modpath("dye") or core.get_modpath("mcl_core")) then
 		minetest.register_craft({
 		    output = 'mapserver:poi_' .. color,
 		    recipe = {
-					{"", "dye:" .. dye, ""},
-					{"default:paper", "default:goldblock", "default:paper"},
-					{"", "default:glass", ""}
+					{"", moditems.dye .. dye, ""},
+					{moditems.paper, moditems.goldblock, moditems.paper},
+					{"", moditems.glass, ""}
 				}
 		})
 	end

@@ -69,13 +69,13 @@ minetest.register_node("mapserver:border", {
 	end
 })
 
-if mapserver.enable_crafting and minetest.get_modpath("default") then
+if mapserver.enable_crafting then
 	minetest.register_craft({
 	    output = 'mapserver:border',
 	    recipe = {
-				{"", "default:steelblock", ""},
-				{"default:paper", "default:goldblock", "default:paper"},
-				{"", "default:glass", ""}
+				{"", moditems:steelblock, ""},
+				{moditems.paper, moditems.goldblock, moditems.paper},
+				{"", moditems.glass, ""}
 			}
 	})
 end
