@@ -33,7 +33,7 @@ minetest.register_node("mapserver:train", {
 		"mapserver_train.png"
 	},
 	groups = {cracky=3,oddly_breakable_by_hand=3},
-	sounds = default.node_sound_glass_defaults(),
+	sounds = moditems.sound_glass(),
 	can_dig = mapserver.can_interact,
 	after_place_node = mapserver.after_place_node,
 
