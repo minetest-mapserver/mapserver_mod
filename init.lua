@@ -11,7 +11,7 @@ if mineclone_path then
 	moditems.paper = "mcl_core:paper"
 	moditems.glass = "mcl_core:glass"
 	moditems.dye = "mcl_dye:"
-else
+elseif default_path then
 	moditems.sound_glass = default.node_sound_glass_defaults
 	moditems.goldblock = "default:goldblock"
 	moditems.steelblock = "default:steelblock"
