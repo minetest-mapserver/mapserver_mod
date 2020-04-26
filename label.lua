@@ -66,13 +66,13 @@ minetest.register_node("mapserver:label", {
 	end
 })
 
-if mapserver.enable_crafting and minetest.get_modpath("default") then
+if mapserver.enable_crafting then
 	minetest.register_craft({
 	    output = 'mapserver:label',
 	    recipe = {
-				{"", "default:paper", ""},
-				{"default:paper", "default:goldblock", "default:paper"},
-				{"", "default:glass", ""}
+				{"", moditems.paper, ""},
+				{moditems.paper, moditems.goldblock, moditems.paper},
+				{"", moditems.glass, ""}
 			}
 	})
 end

@@ -74,13 +74,13 @@ minetest.register_node("mapserver:train", {
 	end
 })
 
-if mapserver.enable_crafting and minetest.get_modpath("default") then
+if mapserver.enable_crafting then
 	minetest.register_craft({
 	    output = 'mapserver:train',
 	    recipe = {
-				{"", "default:steel_ingot", ""},
-				{"default:paper", "default:goldblock", "default:paper"},
-				{"", "default:glass", ""}
+				{"", moditems.steel_ingot, ""},
+				{moditems.paper, moditems.goldblock, moditems.paper},
+				{"", moditems.glass, ""}
 			}
 	})
 end
