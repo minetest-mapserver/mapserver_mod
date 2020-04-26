@@ -19,6 +19,13 @@ mapserver.url = http://127.0.0.1:8080
 mapserver.key = myserverkey
 ```
 
+# Contributors
+
+Thanks to:
+* @Panquesito7 (mod.conf/depends.txt cleanup)
+* @SwissalpS (minor corrections)
+* @Athemis (mineclone support)
+
 # License
 
 * Source code: MIT
