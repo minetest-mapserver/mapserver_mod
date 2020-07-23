@@ -9,16 +9,16 @@ local update_formspec = function(meta)
 
 	meta:set_string("infotext", "POI, name:" .. name .. ", icon:" .. icon)
 
-	meta:set_string("formspec", "size[8,5;]" ..
+	meta:set_string("formspec", "size[8,4;]" ..
 		-- col 1
-		"field[0,1;4,1;name;Name;" .. name .. "]" ..
-		"button_exit[4,1;4,1;save;Save]" ..
+		"field[0.2,1;4,1;name;Name;" .. name .. "]" ..
+		"field[4.2,1;4,1;icon;Icon;" .. icon .. "]" ..
 
 		-- col 2
-		"field[0,2.5;4,1;icon;Icon;" .. icon .. "]" ..
+		"field[0.2,2;8,1;url;URL;" .. url .. "]" ..
 
 		-- col 3
-		"field[0,3.5;8,1;url;URL;" .. url .. "]" ..
+		"button_exit[0,3;8,1;save;Save]" ..
 		"")
 
 end
