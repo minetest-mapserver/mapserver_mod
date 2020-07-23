@@ -44,8 +44,8 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			return
 		end
 
-		local pos1 = vector.subtract(item.pos, {x=1, y=0, z=1})
-		local pos2 = vector.add(item.pos, {x=1, y=0, z=1})
+		local pos1 = vector.subtract(item.pos, {x=2, y=0, z=2})
+		local pos2 = vector.add(item.pos, {x=2, y=0, z=2})
 
 		local nodes = minetest.find_nodes_in_area(pos1, pos2, "air")
 
@@ -113,6 +113,13 @@ local function show_formspec(playername, data)
 			if item.attributes.stock == "0" then
 				color = "#FF0000"
 			end
+
+		elseif item.type == "poi" then
+			-- point of interest
+			description = minetest.formspec_escape(
+				(item.attributes.name or "?") ..
+				" (owner: " .. (item.attributes.owner or "?") .. ")"
+			)
 		end
 
 		-- save description
@@ -171,10 +178,21 @@ minetest.register_chatcommand("search", {
 		json = json .. '"pos2": {"x":2048, "y":2048, "z":2048},'
 		json = json .. '"type":"' .. type .. '"'
 
+		-- switch between types of queries
+		-- search for "out_item" if it is a shop or for "owner" if bones are wanted
+		local key_name = "unknown"
+		if type == "poi" then
+			key_name = "name"
+		elseif type == "bones" then
+			key_name = "owner"
+		elseif type == "shop" then
+			key_name = "out_item"
+		end
+
 		if query and query ~= "*" then
 			json = json .. ','
 			json = json .. '"attributelike":{'
-			json = json .. '"key":"out_item",'
+			json = json .. '"key":"' .. key_name .. '",'
 			json = json .. '"value":"%' .. query .. '%"'
 			json = json .. "}"
 		end
