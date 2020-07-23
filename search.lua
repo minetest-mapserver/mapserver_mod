@@ -161,7 +161,7 @@ minetest.register_chatcommand("search", {
 
 		local _, _, type, query = string.find(param, "^([^%s]+)%s+([^%s]+)%s*$")
 		if type == nil or query == nil or not valid_types[type] then
-			minetest.chat_send_player(playername, "syntax: /search [bones|shop] [<query>|*]")
+			minetest.chat_send_player(playername, "syntax: /search [bones|shop|poi] [<query>|*]")
 			return
 		end
 
