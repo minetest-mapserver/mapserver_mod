@@ -37,7 +37,6 @@ dofile(MP.."/border.lua")
 dofile(MP.."/legacy.lua")
 dofile(MP.."/privs.lua")
 dofile(MP.."/show_waypoint.lua")
-dofile(MP.."/search.lua")
 
 if minetest.get_modpath("bones") then
 	dofile(MP.."/bones.lua")
@@ -81,6 +80,7 @@ if http then
 	dofile(MP .. "/bridge/init.lua")
 
 	-- enable ingame map-search
+	dofile(MP.."/bridge/search.lua")
 	mapserver.search_init(http, mapserver_url)
 
 	-- initialize bridge
