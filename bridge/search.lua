@@ -91,6 +91,7 @@ local function show_formspec(playername, data)
 		local coords = item.pos.x .. "/" .. item.pos.y .. "/" .. item.pos.z
 		local description = ""
 		local color = "#FFFFFF"
+		local add_to_list = true
 
 		-- don't trust any values in attributes, they might not be present
 		if item.type == "bones" then
@@ -102,16 +103,19 @@ local function show_formspec(playername, data)
 
 		elseif item.type == "shop" then
 			-- shop
-			description = minetest.formspec_escape("Shop, " ..
-				"trading " .. (item.attributes.out_count or "?") ..
-				"x " .. (item.attributes.out_item or "?") ..
-				" for " .. (item.attributes.in_count or "?") ..
-				"x " .. (item.attributes.in_item or "?") ..
-				" Stock: " .. (item.attributes.stock or "?")
-			)
 
 			if item.attributes.stock == "0" then
-				color = "#FF0000"
+				-- don't add empty vendors to the list
+				add_to_list = false
+			else
+				-- stocked shop
+				description = minetest.formspec_escape("Shop, " ..
+					"trading " .. (item.attributes.out_count or "?") ..
+					"x " .. (item.attributes.out_item or "?") ..
+					" for " .. (item.attributes.in_count or "?") ..
+					"x " .. (item.attributes.in_item or "?") ..
+					" Stock: " .. (item.attributes.stock or "?")
+				)
 			end
 
 		elseif item.type == "poi" then
@@ -125,7 +129,14 @@ local function show_formspec(playername, data)
 		-- save description
 		item.description = description
 
-		list = list .. "," .. color .. "," .. distance .. "," .. (owner or "?") .. "," .. coords .. "," .. description
+		if add_to_list then
+			list = list .. "," ..
+				color .. "," ..
+				distance .. "," ..
+				(owner or "?") .. "," ..
+				coords .. "," ..
+				description
+		end
 
 	end
 
