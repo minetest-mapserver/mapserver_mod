@@ -39,14 +39,24 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	end
 
 	if fields.teleport then
+		-- teleport player to selected item
 		if not minetest.check_player_privs(playername, "teleport") then
 			minetest.chat_send_player(playername, "Missing priv: 'teleport'")
 			return
 		end
 
+		-- flat destination coordinates per default
 		local pos1 = vector.subtract(item.pos, {x=2, y=0, z=2})
 		local pos2 = vector.add(item.pos, {x=2, y=0, z=2})
 
+		if item.type == "bones" then
+			-- search for air _above_ the bones
+			pos1 = vector.subtract(item.pos, {x=0, y=0, z=0})
+			pos2 = vector.add(item.pos, {x=0, y=10, z=0})
+		end
+
+		-- forceload target coordinates before searching for air
+		minetest.get_voxel_manip():read_from_map(pos1, pos2)
 		local nodes = minetest.find_nodes_in_area(pos1, pos2, "air")
 
 		if #nodes > 0 then
