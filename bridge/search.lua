@@ -142,7 +142,7 @@ local function show_formspec(playername, data)
 		if add_to_list then
 			-- result data
 			table.insert(last_result_data, item)
-			
+
 			-- formspec data
 			list = list .. "," ..
 				color .. "," ..
