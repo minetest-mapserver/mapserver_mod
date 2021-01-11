@@ -19,6 +19,8 @@ elseif default_path then
 	moditems.paper = "default:paper"
 	moditems.glass = "default:glass"
 	moditems.dye = "dye:"
+else
+	moditems.sound_glass = function() end
 end
 
 mapserver = {
