@@ -36,7 +36,7 @@ mapserver.bridge.add_advtrains = function(data)
     --print(dump(entry))
     if entry[1].signal then
       local tcb = entry[1]
-      local green = tcb.aspect and tcb.aspect.main and tcb.aspect.main.free
+      local green = tcb.aspect and tcb.aspect.main ~= 0
       table.insert(data.signals, {
 	      pos = tcb.signal,
 	      green = green
