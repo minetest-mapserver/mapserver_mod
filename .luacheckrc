@@ -21,6 +21,6 @@ read_globals = {
 	"minecart", locator = { fields = { "beacons" } },
 
 	-- optional mods
-	"xban", "monitoring",
+	"xban", "monitoring", "QoS",
 	"mcl_core", "mcl_sounds"
 }

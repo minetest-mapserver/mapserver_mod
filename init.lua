@@ -19,6 +19,8 @@ elseif default_path then
 	moditems.paper = "default:paper"
 	moditems.glass = "default:glass"
 	moditems.dye = "dye:"
+else
+	moditems.sound_glass = function() end
 end
 
 mapserver = {
@@ -44,7 +46,7 @@ end
 
 
 -- optional mapserver-bridge stuff below
-local http = minetest.request_http_api()
+local http = QoS and QoS(minetest.request_http_api(), 2) or minetest.request_http_api()
 
 if http then
 	-- check if the mapserver.json is in the world-folder

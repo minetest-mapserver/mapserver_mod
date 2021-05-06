@@ -91,8 +91,8 @@ local function show_formspec(playername, data)
 		return a.distance < b.distance
 	end)
 
-	-- store as last result
-	search_results[playername] = data
+	-- data to store as last result
+	local last_result_data = {}
 
 	-- render list items
 	for _, item in ipairs(data) do
@@ -140,6 +140,10 @@ local function show_formspec(playername, data)
 		item.description = description
 
 		if add_to_list then
+			-- result data
+			table.insert(last_result_data, item)
+
+			-- formspec data
 			list = list .. "," ..
 				color .. "," ..
 				distance .. "," ..
@@ -149,6 +153,9 @@ local function show_formspec(playername, data)
 		end
 
 	end
+
+	-- store filtered result data
+	search_results[playername] = last_result_data
 
 	list = list .. ";]"
 
