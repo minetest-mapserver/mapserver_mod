@@ -39,19 +39,19 @@ minetest.register_node("mapserver:train", {
 	on_construct = function(pos)
 		local meta = minetest.get_meta(pos)
 
-		local find_nearest_player = function(pos, radius)
+		local find_nearest_player = function(block_pos, radius)
 			-- adapted from https://forum.minetest.net/viewtopic.php?t=23319
 
 			local closest_d = radius+1
 			local closest_name
 
-			for i, obj in ipairs(minetest.get_objects_inside_radius(pos, radius)) do
+			for i, obj in ipairs(minetest.get_objects_inside_radius(block_pos, radius)) do
 				-- 0.4.x compatibility:
 				--if obj:get_player_name() ~= "" then
 
 				-- 5.0.0+ method:
 				if minetest.is_player(obj) then
-					local distance = vector.distance(obj:get_pos(), pos)
+					local distance = vector.distance(obj:get_pos(), block_pos)
 					if distance < closest_d then
 						closest_d = distance
 						closest_name = obj:get_player_name()
