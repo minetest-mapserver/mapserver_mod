@@ -34,55 +34,30 @@ minetest.register_node("mapserver:train", {
 	groups = {cracky=3,oddly_breakable_by_hand=3},
 	sounds = moditems.sound_glass(),
 	can_dig = mapserver.can_interact,
-	after_place_node = mapserver.after_place_node,
 
-	on_construct = function(pos)
+	after_place_node = function(pos, placer, itemstack, pointed_thing)
 		local meta = minetest.get_meta(pos)
-
-		local find_nearest_player = function(block_pos, radius)
-			-- adapted from https://forum.minetest.net/viewtopic.php?t=23319
-
-			local closest_d = radius+1
-			local closest_name
-
-			for i, obj in ipairs(minetest.get_objects_inside_radius(block_pos, radius)) do
-				-- 0.4.x compatibility:
-				--if obj:get_player_name() ~= "" then
-
-				-- 5.0.0+ method:
-				if minetest.is_player(obj) then
-					local distance = vector.distance(obj:get_pos(), block_pos)
-					if distance < closest_d then
-						closest_d = distance
-						closest_name = obj:get_player_name()
-					end
-				end
-			end
-
-			-- if 'closest_name' is nil, there's no player inside that radius
-			return closest_name
-		end
-
-		-- 10 should be the max possible interaction distance
-		local name = find_nearest_player(pos, 10)
 
 		local last_index = 0
 		local last_line = ""
 		local last_color = ""
 
-		if name ~= nil then
-			name = string.lower(name)
-			if last_set_by[name] ~= nil then
-				last_index = last_set_by[name].index + 5
-				last_line = last_set_by[name].line
-				last_color = last_set_by[name].color
-			else
-				last_set_by[name] = {}
-			end
+		if minetest.is_player(placer) then
+			local name = placer:get_player_name()
+			if name ~= nil then
+				name = string.lower(name)
+				if last_set_by[name] ~= nil then
+					last_index = last_set_by[name].index + 5
+					last_line = last_set_by[name].line
+					last_color = last_set_by[name].color
+				else
+					last_set_by[name] = {}
+				end
 
-			last_set_by[name].index = last_index
-			last_set_by[name].line = last_line
-			last_set_by[name].color = last_color
+				last_set_by[name].index = last_index
+				last_set_by[name].line = last_line
+				last_set_by[name].color = last_color
+			end
 		end
 
 		meta:set_string("station", "")
@@ -91,6 +66,9 @@ minetest.register_node("mapserver:train", {
 		meta:set_string("color", last_color)
 
 		update_formspec(meta)
+
+
+		return mapserver.after_place_node(pos, placer, itemstack, pointed_thing)
 	end,
 
 	on_receive_fields = function(pos, formname, fields, sender)
