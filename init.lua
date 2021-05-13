@@ -44,7 +44,7 @@ if minetest.get_modpath("bones") then
 	dofile(MP.."/bones.lua")
 end
 
-
+local QoS
 -- optional mapserver-bridge stuff below
 local http = QoS and QoS(minetest.request_http_api(), 2) or minetest.request_http_api()
 
