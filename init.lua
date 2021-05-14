@@ -44,9 +44,11 @@ if minetest.get_modpath("bones") then
 	dofile(MP.."/bones.lua")
 end
 
-local QoS
--- optional mapserver-bridge stuff below
-local http = QoS and QoS(minetest.request_http_api(), 2) or minetest.request_http_api()
+local http = minetest.request_http_api()
+if minetest.get_modpath("qos") and http then
+	-- use qos-wrapped http
+	http = QoS(http, 2)
+end
 
 if http then
 	-- check if the mapserver.json is in the world-folder
