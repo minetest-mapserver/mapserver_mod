@@ -9,7 +9,6 @@ mapserver.bridge.add_players = function(data)
     local is_moderator = minetest.check_player_privs(player:get_player_name(), {ban = true})
 
     local detail = minetest.get_player_information(player:get_player_name())
-
     local protocol_version = -1
     local rtt = -1
 
@@ -23,7 +22,7 @@ mapserver.bridge.add_players = function(data)
       pos = player:get_pos(),
       hp = player:get_hp(),
       breath = player:get_breath(),
-      velocity = player:get_player_velocity(),
+      velocity = player:get_velocity(),
       moderator = is_moderator,
       rtt = rtt,
       protocol_version = protocol_version
