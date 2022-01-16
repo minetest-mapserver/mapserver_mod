@@ -451,7 +451,7 @@ recalculate_line_to = function(pos_a, pos_b, meta_a, meta_b)
 				connid = connid,
 				steps = 0,
 				score = vector.distance(rail_pos_a, rail_pos_b),
-				line = {minetest.pos_to_string(rail_pos_a)}
+				line = {}
 			})
 		end
 
@@ -479,6 +479,7 @@ recalculate_line_to = function(pos_a, pos_b, meta_a, meta_b)
 				-- found destination!
 				-- set line and break loop
 				line = min_item.line
+				table.insert(line, minetest.pos_to_string(rail_pos_b))
 				break
 			else
 				-- remember we did this one to prevent circles
