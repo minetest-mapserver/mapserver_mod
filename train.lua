@@ -4,8 +4,7 @@ local last_set_by = {}
 
 local find_neighbor_blocks -- defined later
 local update_neighbors --defined later
-local recalculate_between -- defined later
-local traverser -- defined later
+local recalculate_line_to -- defined later
 local TRAVERSER_LIMIT = 1000
 
 local update_formspec = function(meta)
@@ -111,11 +110,12 @@ minetest.register_node("mapserver:train", {
 		end
 
 		local meta = minetest.get_meta(pos)
-		local name = string.lower(sender:get_player_name())
+		local name = sender:get_player_name()
+		local lname = string.lower(name)
 
 		if fields.save then
-			if last_set_by[name] == nil then
-				last_set_by[name] = {}
+			if last_set_by[lname] == nil then
+				last_set_by[lname] = {}
 			end
 
 			local index = tonumber(fields.index)
@@ -128,10 +128,10 @@ minetest.register_node("mapserver:train", {
 			meta:set_string("station", fields.station)
 			meta:set_int("index", index)
 
-			last_set_by[name].color = fields.color
-			last_set_by[name].line = fields.line
-			last_set_by[name].station = fields.station
-			last_set_by[name].index = index
+			last_set_by[lname].color = fields.color
+			last_set_by[lname].line = fields.line
+			last_set_by[lname].station = fields.station
+			last_set_by[lname].index = index
 
 			update_neighbors(pos, meta, name)
 
@@ -141,21 +141,22 @@ minetest.register_node("mapserver:train", {
 
 		elseif fields.set_rail_pos then
 			minetest.chat_send_player(name, "Please punch the nearest rail this train line follows.")
-			if last_set_by[name] == nil then
-				last_set_by[name] = {}
+			if last_set_by[lname] == nil then
+				last_set_by[lname] = {}
 			end
-			last_set_by[name].waiting_for_rail = pos
+			last_set_by[lname].waiting_for_rail = pos
 		end
 	end
 })
 
 minetest.register_on_punchnode(function(pos, node, sender, pointed_thing)
 	local name = sender:get_player_name()
+	local lname = string.lower(name)
 	local blockpos = nil
-	if last_set_by[name] ~= nil and
-		last_set_by[name].waiting_for_rail ~= nil then
+	if last_set_by[lname] ~= nil and
+		last_set_by[lname].waiting_for_rail ~= nil then
 
-		blockpos = last_set_by[name].waiting_for_rail
+		blockpos = last_set_by[lname].waiting_for_rail
 	else
 		return
 	end
@@ -176,7 +177,7 @@ minetest.register_on_punchnode(function(pos, node, sender, pointed_thing)
 		else
 			minetest.chat_send_player(name, "Node is too far away. Aborted.")
 		end
-		last_set_by[name].waiting_for_rail = nil
+		last_set_by[lname].waiting_for_rail = nil
 	end
 end)
 
