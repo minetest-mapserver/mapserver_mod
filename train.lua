@@ -488,11 +488,15 @@ recalculate_line_to = function(pos_a, pos_b, meta_a, meta_b)
 				if min_item.steps > TRAVERSER_LIMIT then
 					print("went over traverser limit! "..minetest.pos_to_string(rail_pos_a).." → "..minetest.pos_to_string(adj_pos))
 				else
+					local inconn = next_conns[adj_connid]
 					-- query the next conns
+					local quarter = AT_CMAX/4
 					for nconnid, nconn in ipairs(next_conns) do
-						if adj_connid ~= nconnid then
+						local normed = (nconn.c-inconn.c)%AT_CMAX
+						-- only accept conns that turn 90deg at most
+						if normed >= quarter and normed <= quarter*3 then
 							local line = clone(min_item.line)
-							if nconn.c ~= min_item.conns[min_item.connid].c then
+							if nconn.c ~= inconn.c then
 								table.insert(line, minetest.pos_to_string(adj_pos))
 							end
 							table.insert(progress, {
