@@ -259,7 +259,7 @@ update_neighbors = function(pos, meta, name)
 
 	-- update or add us
 	-- repurposing prv, prv_meta etc. vars
-	local neighbors = find_neighbor_blocks(pos, meta)
+	local neighbors = find_neighbor_blocks(pos, meta, name)
 	prv = neighbors[1]
 	nxt = neighbors[2]
 	prv_meta = prv ~= nil and minetest.get_meta(prv.pos) or nil
@@ -364,7 +364,106 @@ update_neighbors = function(pos, meta, name)
 	update_formspec(meta)
 end
 
-find_neighbor_blocks = function(pos, meta)
+local nroot = function(root, num)
+	return num^(1/root)
+end
+
+if vector == nil then
+	vector = {}
+	vector.new = function(a, b,c)
+		if vector.check(a) then
+			return vector.copy(a)
+		elseif type(a) == "number" and type(b) == "number" and type(c) == "number" then
+			return {x=a, y=b, z=c}
+		end
+	end
+	vector.zero = function()
+		return vector.new(0,0,0)
+	end
+	vector.copy = function(v)
+		return vector.new(v.x, v.y, v.z)
+	end
+	vector.to_string = function(v)
+		if vector.check(v) then
+			return "("..table.concat({v.x, v.y, v.z}, ",")..")"
+		else
+			return "(invalid vector)"
+		end
+	end
+
+	vector.add = function(p1, p2)
+		return vector.new(p1.x+p2.x, p1.y+p2.y, p1.z+p2.z)
+	end
+	vector.subtract = function(p1, p2)
+		return vector.new(p1.x-p2.x, p1.y-p2.y, p1.z-p2.z)
+	end
+	vector.multiply = function(v, s)
+		return vector.new(v.x*s, v.y*s, v.z*s)
+	end
+	vector.divide = function(v, s)
+		return vector.new(v.x/s, v.y/s, v.z/s)
+	end
+
+	vector.distance = function(p1, p2)
+		return vector.length(vector.subtract(p2, p1))
+	end
+	vector.length = function(v)
+		return nroot(3, v.x*v.x + v.y*v.y + v.z*v.z)
+	end
+	vector.normalize = function(v)
+		return vector.multiply(v, 1/vector.length(v))
+	end
+	vector.offset = function(v, x,y,z)
+		return vector.new(v.x+x, v.y+y, v.z+z)
+	end
+	vector.check = function(v)
+		return type(v) == "table" and
+			type(v.x) == "number" and
+			type(v.y) == "number" and
+			type(v.z) == "number"
+	end
+end
+
+-- searching an area for nodes is expensive.
+-- minetest limits the amount to 4,096,000 nodes.
+-- because there is not a good way to form one cuboid to fit all major long-distance usecases,
+local max_nodes = 4096000
+local cuboid_width_for_height = function(height)
+	return math.floor(math.sqrt(max_nodes / height))
+end
+local span_rectangle = function(pos, radius, height, v_offset, v_invert)
+	local v_dir = v_invert and -1 or 1
+	return { vector.add(pos, vector.multiply(vector.new(-radius, v_offset, -radius), v_dir)),
+			 vector.add(pos, vector.multiply(vector.new(radius, height+v_offset, radius), v_dir)) }
+end
+local halve_area = function(length)
+	return math.floor((length-1) / 2)
+end
+local twocube_length = math.floor(nroot(3, max_nodes*2))
+local flat_height = 7
+local flat_halflength = halve_area(cuboid_width_for_height(flat_height))
+local cuboid_height = math.floor(twocube_length/3)
+local cuboid_length = cuboid_width_for_height(cuboid_height)
+local area_from_offset = function(pos, offset)
+	return {vector.subtract(pos, offset), vector.add(pos, offset)}
+end
+local eight_corners = function(a, b)
+	local diff = vector.subtract(b, a)
+	return { a,
+		vector.add(a, vector.new(diff.x, 0, 0)),
+		vector.add(a, vector.new(0, diff.y, 0)),
+		vector.add(a, vector.new(0, 0, diff.z)),
+		vector.add(a, vector.new(diff.x, diff.y, 0)),
+		vector.add(a, vector.new(diff.x, 0, diff.z)),
+		vector.add(a, vector.new(0, diff.y, diff.z)),
+		b }
+end
+local get_volume = function(span)
+	local diff = vector.subtract(span[2], span[1])
+	return (math.abs(diff.x)+1) * (math.abs(diff.y)+1) * (math.abs(diff.z)+1)
+end
+
+find_neighbor_blocks = function(pos, meta, name)
 	if meta == nil then
 		meta = minetest.get_meta(pos)
 	end
@@ -373,31 +472,47 @@ find_neighbor_blocks = function(pos, meta)
 	local rail_pos = meta:get_string("rail_pos")
 
 	-- the offsets are chosen so that the resulting area is just under the maximum allowable size
-	local offset = vector.new(160,19, 160)
-	local blocks = minetest.find_nodes_in_area(vector.subtract(pos, offset), vector.add(pos, offset), "mapserver:train")
+	local areas = {
+		flat = area_from_offset(pos, vector.new(flat_halflength, halve_area(flat_height), flat_halflength)),
+		upper_half = span_rectangle(pos, halve_area(cuboid_length), cuboid_height-1, halve_area(flat_height)+1),
+		lower_half = span_rectangle(pos, halve_area(cuboid_length), cuboid_height-1, halve_area(flat_height)+1, true)
+	}
+	local blocks = {}
+	for i,span in pairs(areas) do
+		if get_volume(span) > max_nodes then
+			minetest.chat_send_player(name, "Invalid span "..i.." between "..minetest.pos_to_string(span[1]).." and "..minetest.pos_to_string(span[2]).." (volume of "..tostring(get_volume(span))..")")
+			return {}
+		end
+		print("["..i.."] Getting nodes between "..minetest.pos_to_string(span[1]).." and "..minetest.pos_to_string(span[2]).." (should be volume of "..tostring(get_volume(span))..")")
+		blocks[i] = minetest.find_nodes_in_area(span[1], span[2], "mapserver:train")
+		minetest.bulk_set_node(eight_corners(span[1], span[2]), {name=moditems.goldblock})
+		minetest.chat_send_player(name, "Found "..tostring(#blocks[i]).." nodes between "..minetest.pos_to_string(span[1]).." and "..minetest.pos_to_string(span[2]).." ("..i..")")
+	end
 	local prv = nil
 	local nxt = nil
 	local meta = nil
 
-	for _,p in ipairs(blocks) do
-		meta = minetest.get_meta(p)
-		if meta:get_string("line") == line then
-			local idx = tonumber(meta:get_string("index"))
-			if idx < index and
-				(prv == nil or idx > prv.index) then
-					prv = {
-						pos = p,
-						index = idx,
-						rail_pos = meta:get_string("rail_pos")
-					}
-			end
-			if idx > index and
-				(nxt == nil or idx < nxt.index) then
-					nxt = {
-						pos = p,
-						index = idx,
-						rail_pos = meta:get_string("rail_pos")
-					}
+	for _,span in pairs(blocks) do
+		for _,p in pairs(span) do
+			meta = minetest.get_meta(p)
+			if meta:get_string("line") == line then
+				local idx = tonumber(meta:get_string("index"))
+				if idx < index and
+					(prv == nil or idx > prv.index) then
+						prv = {
+							pos = p,
+							index = idx,
+							rail_pos = meta:get_string("rail_pos")
+						}
+				end
+				if idx > index and
+					(nxt == nil or idx < nxt.index) then
+						nxt = {
+							pos = p,
+							index = idx,
+							rail_pos = meta:get_string("rail_pos")
+						}
+				end
 			end
 		end
 	end
