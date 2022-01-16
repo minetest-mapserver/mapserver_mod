@@ -368,65 +368,16 @@ local nroot = function(root, num)
 	return num^(1/root)
 end
 
-if vector == nil then
-	vector = {}
-	vector.new = function(a, b,c)
-		if vector.check(a) then
-			return vector.copy(a)
-		elseif type(a) == "number" and type(b) == "number" and type(c) == "number" then
-			return {x=a, y=b, z=c}
-		end
-	end
-	vector.zero = function()
-		return vector.new(0,0,0)
-	end
-	vector.copy = function(v)
-		return vector.new(v.x, v.y, v.z)
-	end
-	vector.to_string = function(v)
-		if vector.check(v) then
-			return "("..table.concat({v.x, v.y, v.z}, ",")..")"
-		else
-			return "(invalid vector)"
-		end
-	end
-
-	vector.add = function(p1, p2)
-		return vector.new(p1.x+p2.x, p1.y+p2.y, p1.z+p2.z)
-	end
-	vector.subtract = function(p1, p2)
-		return vector.new(p1.x-p2.x, p1.y-p2.y, p1.z-p2.z)
-	end
-	vector.multiply = function(v, s)
-		return vector.new(v.x*s, v.y*s, v.z*s)
-	end
-	vector.divide = function(v, s)
-		return vector.new(v.x/s, v.y/s, v.z/s)
-	end
-
-	vector.distance = function(p1, p2)
-		return vector.length(vector.subtract(p2, p1))
-	end
-	vector.length = function(v)
-		return nroot(3, v.x*v.x + v.y*v.y + v.z*v.z)
-	end
-	vector.normalize = function(v)
-		return vector.multiply(v, 1/vector.length(v))
-	end
-	vector.offset = function(v, x,y,z)
-		return vector.new(v.x+x, v.y+y, v.z+z)
-	end
-	vector.check = function(v)
-		return type(v) == "table" and
-			type(v.x) == "number" and
-			type(v.y) == "number" and
-			type(v.z) == "number"
-	end
-end
-
--- searching an area for nodes is expensive.
--- minetest limits the amount to 4,096,000 nodes.
--- because there is not a good way to form one cuboid to fit all major long-distance usecases,
+-- Searching an area for nodes is expensive.
+-- Minetest limits the amount to 4,096,000 nodes.
+-- Because there is not a good way to form one cuboid to fit all major long-distance usecases
+-- and this will not be frequently executed on a server (only every time a player manually
+-- sets or updates a train map block) we take all we can with 3 separate ranges:
+-- - One layer for most applications in long, flat stretches, allowing for 3 nodes of up/down
+--   deviation, maxes out on 381 x and z deviation.
+-- - One smaller, but higher cuboid on top and bottom of it each, stretching 123 in every
+--   x and z direction and 67 up/down
+-- This should be very luxurious and prove enough for almost everything.
 local max_nodes = 4096000
 local cuboid_width_for_height = function(height)
 	return math.floor(math.sqrt(max_nodes / height))
@@ -441,22 +392,11 @@ local halve_area = function(length)
 end
 local twocube_length = math.floor(nroot(3, max_nodes*2))
 local flat_height = 7
-local flat_halflength = halve_area(cuboid_width_for_height(flat_height))
+local flat_length = cuboid_width_for_height(flat_height)
 local cuboid_height = math.floor(twocube_length/3)
 local cuboid_length = cuboid_width_for_height(cuboid_height)
 local area_from_offset = function(pos, offset)
 	return {vector.subtract(pos, offset), vector.add(pos, offset)}
-end
-local eight_corners = function(a, b)
-	local diff = vector.subtract(b, a)
-	return { a,
-		vector.add(a, vector.new(diff.x, 0, 0)),
-		vector.add(a, vector.new(0, diff.y, 0)),
-		vector.add(a, vector.new(0, 0, diff.z)),
-		vector.add(a, vector.new(diff.x, diff.y, 0)),
-		vector.add(a, vector.new(diff.x, 0, diff.z)),
-		vector.add(a, vector.new(0, diff.y, diff.z)),
-		b }
 end
 local get_volume = function(span)
 	local diff = vector.subtract(span[2], span[1])
@@ -473,20 +413,18 @@ find_neighbor_blocks = function(pos, meta, name)
 
 	-- the offsets are chosen so that the resulting area is just under the maximum allowable size
 	local areas = {
-		flat = area_from_offset(pos, vector.new(flat_halflength, halve_area(flat_height), flat_halflength)),
+		flat = area_from_offset(pos, vector.new(halve_area(flat_length), halve_area(flat_height), halve_area(flat_length))),
 		upper_half = span_rectangle(pos, halve_area(cuboid_length), cuboid_height-1, halve_area(flat_height)+1),
 		lower_half = span_rectangle(pos, halve_area(cuboid_length), cuboid_height-1, halve_area(flat_height)+1, true)
 	}
 	local blocks = {}
 	for i,span in pairs(areas) do
 		if get_volume(span) > max_nodes then
-			minetest.chat_send_player(name, "Invalid span "..i.." between "..minetest.pos_to_string(span[1]).." and "..minetest.pos_to_string(span[2]).." (volume of "..tostring(get_volume(span))..")")
+			minetest.chat_send_player(name, "Internal Error searching for nearby nodes: Invalid span "..i.." between "..minetest.pos_to_string(span[1]).." and "..minetest.pos_to_string(span[2]).." (volume of "..tostring(get_volume(span))..")")
+			minetest.log("error", "[mapserver_mod][trainlines] Internal Error searching for nearby nodes: Invalid span "..i.." between "..minetest.pos_to_string(span[1]).." and "..minetest.pos_to_string(span[2]).." (volume of "..tostring(get_volume(span))..")")
 			return {}
 		end
-		print("["..i.."] Getting nodes between "..minetest.pos_to_string(span[1]).." and "..minetest.pos_to_string(span[2]).." (should be volume of "..tostring(get_volume(span))..")")
 		blocks[i] = minetest.find_nodes_in_area(span[1], span[2], "mapserver:train")
-		minetest.bulk_set_node(eight_corners(span[1], span[2]), {name=moditems.goldblock})
-		minetest.chat_send_player(name, "Found "..tostring(#blocks[i]).." nodes between "..minetest.pos_to_string(span[1]).." and "..minetest.pos_to_string(span[2]).." ("..i..")")
 	end
 	local prv = nil
 	local nxt = nil
