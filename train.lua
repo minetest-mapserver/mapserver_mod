@@ -483,10 +483,15 @@ recalculate_line_to = function(pos_a, pos_b, meta_a, meta_b)
 	local line = {}
 	local rail_pos_a = minetest.string_to_pos(meta_a:get_string("rail_pos"))
 	local rail_pos_b = minetest.string_to_pos(meta_b:get_string("rail_pos"))
-	local node_ok_a, conns_a, rhe_a = advtrains.get_rail_info_at(rail_pos_a, advtrains.all_tracktypes)
-	local node_ok_b, conns_b, rhe_b = advtrains.get_rail_info_at(rail_pos_b, advtrains.all_tracktypes)
+	local node_ok_a, conns_a, rhe_a, node_ok_b, conns_b, rhe_b
+	if rail_pos_a then
+		node_ok_a, conns_a, rhe_a = advtrains.get_rail_info_at(rail_pos_a, advtrains.all_tracktypes)
+		if rail_pos_b then
+			node_ok_b, conns_b, rhe_b = advtrains.get_rail_info_at(rail_pos_b, advtrains.all_tracktypes)
+		end
+	end
 	if not node_ok_a or not node_ok_b then
-		table.insert(line, node_ok_a and minetest.pos_to_string(rail_pos_a) or pos_a)
+		table.insert(line, node_ok_a and minetest.pos_to_string(rail_pos_a) or minetest.pos_to_string(pos_a))
 	else
 		-- depth first search for rail_pos_b,
 		-- vector.distance(step, rail_pos_b) is score
