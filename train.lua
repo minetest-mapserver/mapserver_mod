@@ -548,11 +548,11 @@ recalculate_line_to = function(pos_a, pos_b, meta_a, meta_b)
 				else
 					local inconn = next_conns[adj_connid]
 					-- query the next conns
-					local quarter = AT_CMAX/4
+					local deg45 = AT_CMAX/8
 					for nconnid, nconn in ipairs(next_conns) do
 						local normed = (nconn.c-inconn.c)%AT_CMAX
 						-- only accept conns that turn 90deg at most
-						if normed >= quarter and normed <= quarter*3 then
+						if normed >= deg45 and normed <= AT_CMAX-deg45 then
 							local line = clone(min_item.line)
 							if nconn.c ~= inconn.c then
 								table.insert(line, minetest.pos_to_string(adj_pos))
