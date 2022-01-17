@@ -31,7 +31,8 @@ local update_formspec = function(meta)
 	meta:set_string("infotext", "Train: Line=" .. line .. ", Station=" .. station ..
 		(prv ~= "" and (", prv="..prv) or "") ..
 		(path ~= "" and " (found line)" or "") ..
-		(nxt ~= "" and (", nxt="..nxt) or ""))
+		(nxt ~= "" and (", nxt="..nxt) or "") ..
+		(line ~= "" and prv == "" and nxt == "" and (", no neighbors found") or ""))
 
 	meta:set_string("formspec", "size[8,4;]" ..
 		-- col 1
@@ -100,7 +101,7 @@ minetest.register_node("mapserver:train", {
 
 		-- TODO: why doesn't this work properly?
 
-		update_neighbors(pos, fake_meta, player)
+		update_neighbors(pos, fake_meta, player:get_player_name())
 	end,
 
 	on_receive_fields = function(pos, formname, fields, sender)
@@ -172,7 +173,7 @@ minetest.register_on_punchnode(function(pos, node, sender, pointed_thing)
 				meta:set_string("rail_pos", minetest.pos_to_string(pos))
 				update_neighbors(blockpos, meta, name)
 			else
-				minetest.chat_send_player(name, "This is not rail! Aborted.")
+				minetest.chat_send_player(name, "This is not a rail! Aborted.")
 			end
 		else
 			minetest.chat_send_player(name, "Node is too far away. Aborted.")
