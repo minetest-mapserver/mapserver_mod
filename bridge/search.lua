@@ -190,13 +190,13 @@ local http, url
 
 -- chatcommand
 minetest.register_chatcommand("search", {
-	description = "Search for shops or bones near you. Syntax: /search [bones|shop] [<query>|*]\n"
+	description = "Search for shops or bones near you. Syntax: /search (bones|shop|poi) (<query>|*)\n"
 		.. "e.g. /search bones *",
 	func = function(playername, param)
 
 		local _, _, type, query = string.find(param, "^([^%s]+)%s+([^%s]+)%s*$")
 		if type == nil or query == nil or not valid_types[type] then
-			minetest.chat_send_player(playername, "syntax: /search [bones|shop|poi] [<query>|*]")
+			minetest.chat_send_player(playername, "syntax: /search (bones|shop|poi) (<query>|*)")
 			return
 		end
 
