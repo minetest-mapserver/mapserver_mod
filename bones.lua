@@ -1,6 +1,11 @@
 -- bones owner saving workaround
 -- https://github.com/minetest/minetest_game/blob/master/mods/bones/init.lua#L120
 
+if bones.redo then
+	-- bones redo doesn't remove owner, so workaround is not needed
+	return
+end
+
 local bones_def = minetest.registered_items["bones:bones"]
 assert(bones_def)
 
