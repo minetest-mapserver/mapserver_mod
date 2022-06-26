@@ -8,7 +8,6 @@ dofile(MP .. "/bridge/locator.lua")
 
 -- mapserver http bridge
 local has_advtrains = minetest.get_modpath("advtrains")
-local has_minecart = minetest.get_modpath("minecart")
 local has_locator = minetest.get_modpath("locator")
 local has_monitoring = minetest.get_modpath("monitoring")
 
@@ -41,11 +40,6 @@ function send_stats()
 
   mapserver.bridge.add_players(data)
   mapserver.bridge.add_defaults(data)
-
-  if has_minecart then
-    -- send minecarts positions if mod is installed
-    mapserver.bridge.add_minecart(data)
-  end
 
   if has_advtrains then
     -- send trains if 'advtrains' mod installed

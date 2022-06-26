@@ -18,7 +18,7 @@ read_globals = {
 
 	-- Deps
 	"unified_inventory", "default", "advtrains",
-	"minecart", locator = { fields = { "beacons" } },
+	locator = { fields = { "beacons" } },
 
 	-- optional mods
 	"xban", "monitoring", "QoS",
