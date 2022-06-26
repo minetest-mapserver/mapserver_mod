@@ -252,7 +252,7 @@ minetest.register_chatcommand("search", {
 	end
 })
 
-function mapserver.search_init(_http, _url)
-	http = _http
-	url = _url
+function mapserver.search_init(h, u)
+	http = h
+	url = u
 end

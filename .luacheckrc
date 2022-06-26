@@ -22,5 +22,5 @@ read_globals = {
 
 	-- optional mods
 	"xban", "monitoring", "QoS",
-	"mcl_core", "mcl_sounds"
+	"mcl_core", "mcl_sounds", "bones"
 }

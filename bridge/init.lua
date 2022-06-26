@@ -97,10 +97,10 @@ function send_stats()
 
 end
 
-function mapserver.bridge_init(_http, _url, _key)
-  http = _http
-  url = _url
-  key = _key
+function mapserver.bridge_init(h, u, k)
+  http = h
+  url = u
+  key = k
 
   minetest.after(mapserver.send_interval, send_stats)
 end
