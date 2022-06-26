@@ -2,7 +2,6 @@ local MP = minetest.get_modpath("mapserver")
 dofile(MP .. "/bridge/defaults.lua")
 dofile(MP .. "/bridge/players.lua")
 dofile(MP .. "/bridge/advtrains.lua")
-dofile(MP .. "/bridge/minecart.lua")
 dofile(MP .. "/bridge/locator.lua")
 
 
