@@ -56,7 +56,7 @@ function send_stats()
 
   local t1 = minetest.get_us_time()
   local process_time = t1 - t0
-  if process_time > 10000 then
+  if process_time > 50000 then
     minetest.log("warning", "[mapserver-bridge] processing took " .. process_time .. " us")
   end
 
