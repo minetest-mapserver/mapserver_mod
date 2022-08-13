@@ -10,6 +10,11 @@ local has_advtrains = minetest.get_modpath("advtrains")
 local has_locator = minetest.get_modpath("locator")
 local has_monitoring = minetest.get_modpath("monitoring")
 
+local has_airutils = minetest.get_modpath("airutils")
+if has_airutils then
+    dofile(MP .. "/bridge/airutils_planes.lua")
+end
+
 local metric_post_size
 local metric_processing_post_time
 local metric_post_time
@@ -48,6 +53,11 @@ function send_stats()
   if has_locator then
 	-- send locator beacons
 	mapserver.bridge.add_locators(data)
+  end
+
+  if has_airutils then
+	-- send airutils plane entities
+	mapserver.bridge.add_airutils_planes(data)
   end
 
 
