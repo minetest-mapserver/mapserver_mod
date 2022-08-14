@@ -3,7 +3,8 @@ allow_defined_top = true
 
 globals = {
 	"mapserver",
-	"moditems"
+	"moditems",
+	"airutils"
 }
 
 read_globals = {
