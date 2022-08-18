@@ -1,7 +1,7 @@
 -- bones owner saving workaround
 -- https://github.com/minetest/minetest_game/blob/master/mods/bones/init.lua#L120
 
-if bones.redo then
+if bones and bones.redo then
 	-- bones redo doesn't remove owner, so workaround is not needed
 	return
 end
