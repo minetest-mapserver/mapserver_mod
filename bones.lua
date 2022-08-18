@@ -7,11 +7,14 @@ if bones and bones.redo then
 end
 
 local bones_def = minetest.registered_items["bones:bones"]
-assert(bones_def)
+if not bones_def then
+	return
+end
 
 local bones_on_timer = bones_def.on_timer
-assert(bones_on_timer)
-assert(type(bones_on_timer) == "function")
+if not bones_on_timer or type(bones_on_timer) ~= "function" then
+	return
+end
 
 minetest.override_item("bones:bones", {
 	on_timer = function(pos, elapsed)
