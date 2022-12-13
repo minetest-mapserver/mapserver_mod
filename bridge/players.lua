@@ -25,6 +25,7 @@ mapserver.bridge.add_players = function(data)
       velocity = player:get_velocity(),
       moderator = is_moderator,
       rtt = rtt,
+      yaw = player:get_look_horizontal(),
       protocol_version = protocol_version
     }
 
