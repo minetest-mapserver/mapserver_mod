@@ -1,4 +1,6 @@
 
+local has_skinsdb = minetest.get_modpath("skinsdb") and skins
+
 mapserver.bridge.add_players = function(data)
 
   data.players = {}
@@ -17,6 +19,11 @@ mapserver.bridge.add_players = function(data)
       protocol_version = detail.protocol_version
     end
 
+    local skin
+    if has_skinsdb then
+      skin = skins.get_player_skin(player):get_texture()
+    end
+
     local info = {
       name = player:get_player_name(),
       pos = player:get_pos(),
@@ -26,6 +33,7 @@ mapserver.bridge.add_players = function(data)
       moderator = is_moderator,
       rtt = rtt,
       yaw = player:get_look_horizontal(),
+      skin = skin,
       protocol_version = protocol_version
     }
 
