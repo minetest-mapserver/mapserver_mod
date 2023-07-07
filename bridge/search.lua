@@ -157,6 +157,10 @@ local function show_formspec(playername, data)
 	-- store filtered result data
 	search_results[playername] = last_result_data
 
+	if #last_result_data == 0 then
+		minetest.chat_send_player(playername, "Query failed, no results!")
+		return
+	end
 	minetest.chat_send_player(playername, "Got " .. #last_result_data .. " results")
 
 	list = list .. ";]"
