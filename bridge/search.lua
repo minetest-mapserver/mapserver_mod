@@ -157,6 +157,8 @@ local function show_formspec(playername, data)
 	-- store filtered result data
 	search_results[playername] = last_result_data
 
+	minetest.chat_send_player(playername, "Got " .. #last_result_data .. " results")
+
 	list = list .. ";]"
 
 	local teleport_button = ""
@@ -168,7 +170,7 @@ local function show_formspec(playername, data)
 
 		local formspec = [[
 				size[16,12;]
-				label[0,0;Search results (]] .. #data .. [[)]
+				label[0,0;Search results (]] .. #last_result_data .. [[)]
 				button_exit[0,11;4,1;show;Show]
 				]] .. teleport_button .. [[
 				button_exit[12,11;4,1;exit;Exit]
@@ -236,7 +238,6 @@ minetest.register_chatcommand("search", {
 			if res.code == 200 then
 				local data = minetest.parse_json(res.data)
 				if data and #data > 0 then
-					minetest.chat_send_player(playername, "Got " .. #data .. " results")
 					show_formspec(playername, data)
 				else
 					minetest.chat_send_player(playername, "Query failed, no results!")
