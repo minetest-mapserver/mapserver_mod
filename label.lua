@@ -31,10 +31,12 @@ minetest.register_node("mapserver:label", {
 	tiles = {
 		"mapserver_label.png"
 	},
-	groups = {cracky=3,oddly_breakable_by_hand=3},
+	groups = {cracky=3,oddly_breakable_by_hand=3,handy=1},
 	sounds = moditems.sound_glass(),
 	can_dig = mapserver.can_interact,
 	after_place_node = mapserver.after_place_node,
+	_mcl_blast_resistance = 1,
+	_mcl_hardness = 0.3,
 
 	on_construct = function(pos)
 		local meta = minetest.get_meta(pos)

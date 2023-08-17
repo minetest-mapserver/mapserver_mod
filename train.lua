@@ -31,9 +31,11 @@ minetest.register_node("mapserver:train", {
 	tiles = {
 		"mapserver_train.png"
 	},
-	groups = {cracky=3,oddly_breakable_by_hand=3},
+	groups = {cracky=3,oddly_breakable_by_hand=3,handy=1},
 	sounds = moditems.sound_glass(),
 	can_dig = mapserver.can_interact,
+	_mcl_blast_resistance = 1,
+	_mcl_hardness = 0.3,
 
 	after_place_node = function(pos, placer, itemstack, pointed_thing)
 		local meta = minetest.get_meta(pos)
