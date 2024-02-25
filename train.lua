@@ -87,10 +87,7 @@ minetest.register_node("mapserver:train", {
 				last_set_by[name] = {}
 			end
 
-			local index = tonumber(fields.index)
-			if index ~= nil then
-				index = index
-			end
+			local index = tonumber(fields.index) or 0
 
 			meta:set_string("color", fields.color)
 			meta:set_string("line", fields.line)
