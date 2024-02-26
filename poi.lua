@@ -47,6 +47,7 @@ local register_poi = function(color, dye)
 			"[combine:16x16:0,0=mapserver_gold_block.png:3,2=mapserver_poi_" .. color .. ".png"
 		},
 		groups = {cracky=3,oddly_breakable_by_hand=3,handy=1},
+		is_ground_content = false,
 		sounds = moditems.sound_glass(),
 		can_dig = mapserver.can_interact,
 		after_place_node = mapserver.after_place_node,
