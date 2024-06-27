@@ -9,7 +9,7 @@ local update_formspec = function(meta)
 
 	meta:set_string("infotext", "POI, name:" .. name .. ", icon:" .. icon)
 
-	meta:set_string("formspec", "size[8,4;]" ..
+	meta:set_string("formspec", "size[8,5;]" ..
 		-- col 1
 		"field[0.2,1;4,1;name;Name;" .. name .. "]" ..
 		"field[4.2,1;4,1;icon;Icon;" .. icon .. "]" ..
@@ -18,7 +18,10 @@ local update_formspec = function(meta)
 		"field[0.2,2;8,1;url;URL;" .. url .. "]" ..
 
 		-- col 3
-		"button_exit[0,3;8,1;save;Save]" ..
+		"field[0.2,3;8,1;image;Image;" .. url .. "]" ..
+
+		-- col 4
+		"button_exit[0,4;8,1;save;Save]" ..
 		"")
 
 end
@@ -34,6 +37,7 @@ local on_receive_fields = function(pos, formname, fields, sender)
 	if fields.save then
 		meta:set_string("name", fields.name)
 		meta:set_string("url", fields.url)
+		meta:set_string("image", fields.image)
 		meta:set_string("icon", fields.icon or "home")
 	end
 
@@ -60,6 +64,7 @@ local register_poi = function(color, dye)
 			meta:set_string("name", "<unconfigured>")
 			meta:set_string("icon", "home")
 			meta:set_string("url", "")
+			meta:set_string("image", "")
 
 			update_formspec(meta)
 		end,
