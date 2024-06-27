@@ -6,6 +6,7 @@ local update_formspec = function(meta)
 	local name = meta:get_string("name")
 	local icon = meta:get_string("icon") or "home"
 	local url = meta:get_string("url") or ""
+	local image = meta:get_string("image") or ""
 
 	meta:set_string("infotext", "POI, name:" .. name .. ", icon:" .. icon)
 
@@ -18,7 +19,7 @@ local update_formspec = function(meta)
 		"field[0.2,2;8,1;url;URL;" .. url .. "]" ..
 
 		-- col 3
-		"field[0.2,3;8,1;image;Image;" .. url .. "]" ..
+		"field[0.2,3;8,1;image;Image;" .. image .. "]" ..
 
 		-- col 4
 		"button_exit[0,4;8,1;save;Save]" ..
