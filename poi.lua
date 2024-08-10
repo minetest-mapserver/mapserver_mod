@@ -5,24 +5,28 @@
 local update_formspec = function(meta)
 	local name = meta:get_string("name")
 	local icon = meta:get_string("icon") or "home"
+	local addr = meta:get_string("addr") or ""
 	local url = meta:get_string("url") or ""
 	local image = meta:get_string("image") or ""
 
 	meta:set_string("infotext", "POI, name:" .. name .. ", icon:" .. icon)
 
-	meta:set_string("formspec", "size[8,5;]" ..
+	meta:set_string("formspec", "size[8,6;]" ..
 		-- col 1
 		"field[0.2,1;4,1;name;Name;" .. name .. "]" ..
 		"field[4.2,1;4,1;icon;Icon;" .. icon .. "]" ..
 
-		-- col 2
-		"field[0.2,2;8,1;url;URL;" .. url .. "]" ..
+		-- col 3
+		"field[0.2,3;8,1;addr;Address;" .. addr .. "]" ..
 
 		-- col 3
-		"field[0.2,3;8,1;image;Image;" .. image .. "]" ..
+		"field[0.2,3;8,1;url;URL;" .. url .. "]" ..
 
 		-- col 4
-		"button_exit[0,4;8,1;save;Save]" ..
+		"field[0.2,4;8,1;image;Image;" .. image .. "]" ..
+
+		-- col 5
+		"button_exit[0,5;8,1;save;Save]" ..
 		"")
 
 end
@@ -37,6 +41,7 @@ local on_receive_fields = function(pos, formname, fields, sender)
 
 	if fields.save then
 		meta:set_string("name", fields.name)
+		meta:set_string("addr", fields.addr)
 		meta:set_string("url", fields.url)
 		meta:set_string("image", fields.image)
 		meta:set_string("icon", fields.icon or "home")
@@ -64,6 +69,7 @@ local register_poi = function(color, dye)
 
 			meta:set_string("name", "<unconfigured>")
 			meta:set_string("icon", "home")
+			meta:set_string("addr", "")
 			meta:set_string("url", "")
 			meta:set_string("image", "")
 
