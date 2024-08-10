@@ -16,8 +16,8 @@ local update_formspec = function(meta)
 		"field[0.2,1;4,1;name;Name;" .. name .. "]" ..
 		"field[4.2,1;4,1;icon;Icon;" .. icon .. "]" ..
 
-		-- col 3
-		"field[0.2,3;8,1;addr;Address;" .. addr .. "]" ..
+		-- col 2
+		"field[0.2,2;8,1;addr;Address;" .. addr .. "]" ..
 
 		-- col 3
 		"field[0.2,3;8,1;url;URL;" .. url .. "]" ..
