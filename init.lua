@@ -44,7 +44,7 @@ if minetest.get_modpath("bones") then
 	dofile(MP.."/bones.lua")
 end
 
-local http = minetest.request_http_api()
+local http = minetest.request_http_api and minetest.request_http_api()
 if minetest.get_modpath("qos") and http then
 	-- use qos-wrapped http
 	http = QoS(http, 2)
