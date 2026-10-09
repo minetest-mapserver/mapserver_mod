@@ -32,6 +32,8 @@ mapserver = {
 
 local MP = minetest.get_modpath("mapserver")
 dofile(MP.."/common.lua")
+dofile(MP.."/nodedefs.lua")
+dofile(MP.."/media.lua")
 dofile(MP.."/poi.lua")
 dofile(MP.."/train.lua")
 dofile(MP.."/label.lua")
@@ -89,6 +91,10 @@ if http then
 
 	-- initialize bridge
 	mapserver.bridge_init(http, mapserver_url, mapserver_key)
+
+	-- send nodedefs and media for web-rendering
+	mapserver.post_nodedefs(http, mapserver_url, mapserver_key)
+	mapserver.post_media(http, mapserver_url, mapserver_key)
 
 else
 	print("[Mapserver] bridge not active, additional infos will not be visible on the map")

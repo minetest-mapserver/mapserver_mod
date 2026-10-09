@@ -62,7 +62,6 @@ function send_stats()
 
 
 	local json = minetest.write_json(data)
-	--print(json)--XXX
 
 	local t1 = minetest.get_us_time()
 	local process_time = t1 - t0
@@ -76,7 +75,7 @@ function send_stats()
 	end
 
 	http.fetch({
-		url = url .. "/api/minetest",
+		url = url .. "/api/luanti/stats",
 		extra_headers = { "Content-Type: application/json", "Authorization: " .. key },
 		timeout = 5,
 		post_data = json
