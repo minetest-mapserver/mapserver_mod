@@ -19,9 +19,19 @@ mapserver.bridge.add_players = function(data)
 			protocol_version = detail.protocol_version
 		end
 
-		local skin
+		local skin, skin_texture
 		if has_skinsdb then
+			-- texture name
 			skin = skins.get_player_skin(player):get_texture()
+
+			local texture_path = minetest.get_modpath("skinsdb") .. "/textures/" .. skin
+			local f = io.open(texture_path, "rb")
+
+			if f then
+				-- texture png data
+				skin_texture = minetest.encode_base64(f:read("*all"))
+				f:close()
+			end
 		end
 
 		local info = {
@@ -34,6 +44,7 @@ mapserver.bridge.add_players = function(data)
 			rtt = rtt,
 			yaw = player:get_look_horizontal(),
 			skin = skin,
+			skin_texture = skin_texture,
 			protocol_version = protocol_version
 		}
 
