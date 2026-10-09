@@ -71,11 +71,11 @@ minetest.register_node("mapserver:label", {
 
 if mapserver.enable_crafting then
 	minetest.register_craft({
-	    output = 'mapserver:label',
-	    recipe = {
-				{"", moditems.paper, ""},
-				{moditems.paper, moditems.goldblock, moditems.paper},
-				{"", moditems.glass, ""}
-			}
+		output = 'mapserver:label',
+		recipe = {
+			{"", moditems.paper, ""},
+			{moditems.paper, moditems.goldblock, moditems.paper},
+			{"", moditems.glass, ""}
+		}
 	})
 end

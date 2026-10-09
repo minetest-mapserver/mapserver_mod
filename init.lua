@@ -99,5 +99,5 @@ end
 print("[OK] Mapserver")
 
 if minetest.settings:get_bool("enable_mapserver_integration_test") then
-        dofile(MP.."/integration_test.lua")
+	dofile(MP.."/integration_test.lua")
 end

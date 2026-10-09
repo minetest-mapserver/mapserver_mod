@@ -172,7 +172,7 @@ local function show_formspec(playername, data)
 		teleport_button = "button_exit[4,11;4,1;teleport;Teleport]"
 	end
 
-		local formspec = [[
+	local formspec = [[
 				size[16,12;]
 				label[0,0;Search results (]] .. #last_result_data .. [[)]
 				button_exit[0,11;4,1;show;Show]
@@ -181,7 +181,7 @@ local function show_formspec(playername, data)
 				tablecolumns[color;text;text;text;text]
 				table[0,1;15.7,10;items;#999,Distance,Owner,Coords,Description]] .. list
 
-		minetest.show_formspec(playername, FORMNAME, formspec)
+	minetest.show_formspec(playername, FORMNAME, formspec)
 end
 
 -- valid search types
@@ -197,7 +197,7 @@ local http, url
 -- chatcommand
 minetest.register_chatcommand("search", {
 	description = "Search for shops or bones near you. Syntax: /search (bones|shop|poi) (<query>|*)\n"
-		.. "e.g. /search bones *",
+	.. "e.g. /search bones *",
 	func = function(playername, param)
 
 		local _, _, type, query = string.find(param, "^([^%s]+)%s+([^%s]+)%s*$")
@@ -234,11 +234,11 @@ minetest.register_chatcommand("search", {
 		json = json .. "}"
 
 		http.fetch({
-	    url = url .. "/api/mapobjects/",
-	    timeout = 10,
+			url = url .. "/api/mapobjects/",
+			timeout = 10,
 			extra_headers = { "Content-Type: application/json" },
-	    post_data = json
-	  }, function(res)
+			post_data = json
+		}, function(res)
 			if res.code == 200 then
 				local data = minetest.parse_json(res.data)
 				if data and #data > 0 then
@@ -249,7 +249,7 @@ minetest.register_chatcommand("search", {
 			else
 				minetest.chat_send_player(playername, "Query failed, http-status: " .. (res.status or "<none>"))
 			end
-	  end)
+		end)
 
 
 

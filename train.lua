@@ -107,11 +107,11 @@ minetest.register_node("mapserver:train", {
 
 if mapserver.enable_crafting then
 	minetest.register_craft({
-	    output = 'mapserver:train',
-	    recipe = {
-				{"", moditems.steel_ingot, ""},
-				{moditems.paper, moditems.goldblock, moditems.paper},
-				{"", moditems.glass, ""}
-			}
+		output = 'mapserver:train',
+		recipe = {
+			{"", moditems.steel_ingot, ""},
+			{moditems.paper, moditems.goldblock, moditems.paper},
+			{"", moditems.glass, ""}
+		}
 	})
 end

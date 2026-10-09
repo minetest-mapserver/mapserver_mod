@@ -5,7 +5,7 @@ minetest.register_lbm({
 	nodenames = {"tileserver:poi"},
 	run_at_every_load = true,
 	action = function(pos, node)
-    minetest.swap_node(pos, { name="mapserver:poi" })
+		minetest.swap_node(pos, { name="mapserver:poi" })
 	end
 })
 
@@ -15,6 +15,6 @@ minetest.register_lbm({
 	nodenames = {"tileserver:train"},
 	run_at_every_load = true,
 	action = function(pos, node)
-    minetest.swap_node(pos, { name="mapserver:train" })
+		minetest.swap_node(pos, { name="mapserver:train" })
 	end
 })
