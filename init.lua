@@ -37,6 +37,7 @@ end
 local MP = minetest.get_modpath("mapserver")
 dofile(MP.."/common.lua")
 dofile(MP.."/nodedefs.lua")
+dofile(MP.."/media.lua")
 dofile(MP.."/poi.lua")
 dofile(MP.."/train.lua")
 dofile(MP.."/label.lua")
@@ -97,12 +98,8 @@ if http then
 	mapserver.bridge_init()
 
 	-- send nodedefs and media for web-rendering
-	local ie = minetest.request_insecure_environment()
-	if ie then
-		loadfile(MP.."/media.lua")(ie)
-		mapserver.post_nodedefs()
-		mapserver.post_media()
-	end
+	mapserver.post_nodedefs()
+	mapserver.post_media()
 
 else
 	mapserver.log("warn", "bridge not active, additional infos will not be visible on the map")

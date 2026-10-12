@@ -1,4 +1,3 @@
-local ie = ...
 
 function mapserver.post_media()
 
@@ -60,7 +59,7 @@ function mapserver.post_media()
                 break
             end
 
-            local f = ie.io.open(media.full_path, "rb")
+            local f = io.open(media.full_path, "rb")
             local data = f:read("*all")
             current_size = current_size + #data
             local base64_data = minetest.encode_base64(data)
