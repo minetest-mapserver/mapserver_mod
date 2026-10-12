@@ -82,19 +82,20 @@ if http then
 	if not mapserver_url then error("mapserver.url is not defined") end
 	if not mapserver_key then error("mapserver.key is not defined") end
 
+	-- load and configure api
+	mapserver.api = loadfile(MP.."/api.lua")(http, mapserver_url, mapserver_key)
 	print("[Mapserver] starting mapserver-bridge with endpoint: " .. mapserver_url)
 	dofile(MP .. "/bridge/init.lua")
 
 	-- enable ingame map-search
 	dofile(MP.."/bridge/search.lua")
-	mapserver.search_init(http, mapserver_url)
 
 	-- initialize bridge
-	mapserver.bridge_init(http, mapserver_url, mapserver_key)
+	mapserver.bridge_init()
 
 	-- send nodedefs and media for web-rendering
-	mapserver.post_nodedefs(http, mapserver_url, mapserver_key)
-	mapserver.post_media(http, mapserver_url, mapserver_key)
+	mapserver.post_nodedefs()
+	mapserver.post_media()
 
 else
 	print("[Mapserver] bridge not active, additional infos will not be visible on the map")

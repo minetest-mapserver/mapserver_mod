@@ -208,6 +208,7 @@ minetest.register_chatcommand("search", {
 
 		local json = "{"
 
+		-- TODO: use `core.write_json` (if the float-casting issue on go-side is resolved)
 		json = json .. '"pos1": {"x":-2048, "y":-2048, "z":-2048},'
 		json = json .. '"pos2": {"x":2048, "y":2048, "z":2048},'
 		json = json .. '"type":"' .. type .. '"'
@@ -233,12 +234,7 @@ minetest.register_chatcommand("search", {
 
 		json = json .. "}"
 
-		http.fetch({
-			url = url .. "/api/mapobjects/",
-			timeout = 10,
-			extra_headers = { "Content-Type: application/json" },
-			post_data = json
-		}, function(res)
+		mapserver.api.search(json, function(res)
 			if res.code == 200 then
 				local data = minetest.parse_json(res.data)
 				if data and #data > 0 then
@@ -251,13 +247,6 @@ minetest.register_chatcommand("search", {
 			end
 		end)
 
-
-
 		return true, "Searching for: " .. type .. " '" .. query .. "' ..."
 	end
 })
-
-function mapserver.search_init(h, u)
-	http = h
-	url = u
-end

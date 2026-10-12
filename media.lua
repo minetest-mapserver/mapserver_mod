@@ -1,5 +1,5 @@
 
 
-function mapserver.post_media(http, mapserver_url, mapserver_key)
+function mapserver.post_media()
     -- TODO send textures and models
 end

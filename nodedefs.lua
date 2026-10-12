@@ -45,20 +45,13 @@ function mapserver.post_nodedefs(http, mapserver_url, mapserver_key)
         defs[name] = def
     end
 
-    local json = minetest.write_json(defs)
-
     local function do_post()
-        print("[Mapserver] Posting nodedef data: " .. #json .. " bytes / " .. count .. " defs")
+        print("[Mapserver] Posting " .. count .. " nodedefs")
 
-        http.fetch({
-            url = mapserver_url .. "/api/luanti/nodedefs",
-            extra_headers = { "Content-Type: application/json", "Authorization: " .. mapserver_key },
-            timeout = 5,
-            post_data = json
-        }, function(res)
-            if not res.succeeded then
+        mapserver.api.send_nodedefs(defs, function(res)
+            if not res.succeeded or res.code ~= 200 then
                 print("[Mapserver] failed to post nodedef data, retrying later again")
-                minetest.after(60, do_post)
+                minetest.after(30, do_post)
             end
         end)
     end
