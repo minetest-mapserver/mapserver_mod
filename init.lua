@@ -30,10 +30,13 @@ mapserver = {
 	bridge = {}
 }
 
+function mapserver.log(level, msg)
+	minetest.log(level, "[mapserver] " .. msg)
+end
+
 local MP = minetest.get_modpath("mapserver")
 dofile(MP.."/common.lua")
 dofile(MP.."/nodedefs.lua")
-dofile(MP.."/media.lua")
 dofile(MP.."/poi.lua")
 dofile(MP.."/train.lua")
 dofile(MP.."/label.lua")
@@ -84,7 +87,7 @@ if http then
 
 	-- load and configure api
 	mapserver.api = loadfile(MP.."/api.lua")(http, mapserver_url, mapserver_key)
-	print("[Mapserver] starting mapserver-bridge with endpoint: " .. mapserver_url)
+	mapserver.log("info", "starting mapserver-bridge with endpoint: " .. mapserver_url)
 	dofile(MP .. "/bridge/init.lua")
 
 	-- enable ingame map-search
@@ -94,16 +97,17 @@ if http then
 	mapserver.bridge_init()
 
 	-- send nodedefs and media for web-rendering
-	mapserver.post_nodedefs()
-	mapserver.post_media()
+	local ie = minetest.request_insecure_environment()
+	if ie then
+		loadfile(MP.."/media.lua")(ie)
+		mapserver.post_nodedefs()
+		mapserver.post_media()
+	end
 
 else
-	print("[Mapserver] bridge not active, additional infos will not be visible on the map")
+	mapserver.log("warn", "bridge not active, additional infos will not be visible on the map")
 
 end
-
-
-print("[OK] Mapserver")
 
 if minetest.settings:get_bool("enable_mapserver_integration_test") then
 	dofile(MP.."/integration_test.lua")

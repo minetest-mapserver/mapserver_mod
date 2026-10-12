@@ -191,9 +191,6 @@ local valid_types = {
 	poi = true
 }
 
--- global values, passed by init
-local http, url
-
 -- chatcommand
 minetest.register_chatcommand("search", {
 	description = "Search for shops or bones near you. Syntax: /search (bones|shop|poi) (<query>|*)\n"

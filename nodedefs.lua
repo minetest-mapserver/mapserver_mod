@@ -46,11 +46,11 @@ function mapserver.post_nodedefs(http, mapserver_url, mapserver_key)
     end
 
     local function do_post()
-        print("[Mapserver] Posting " .. count .. " nodedefs")
+        mapserver.log("info", "posting " .. count .. " nodedefs")
 
         mapserver.api.send_nodedefs(defs, function(res)
             if not res.succeeded or res.code ~= 200 then
-                print("[Mapserver] failed to post nodedef data, retrying later again")
+                mapserver.log("info", "failed to post nodedef data, retrying later again")
                 minetest.after(30, do_post)
             end
         end)

@@ -1,5 +1,5 @@
 
-minetest.log("warning", "[TEST] integration-test enabled!")
+mapserver.log("warning", "[TEST] integration-test enabled!")
 
 minetest.register_on_mods_loaded(function()
 	minetest.after(1, function()
@@ -19,7 +19,7 @@ minetest.register_on_mods_loaded(function()
 			file:close()
 		end
 
-		minetest.log("warning", "[TEST] integration tests done!")
+		mapserver.log("warning", "[TEST] integration tests done!")
 		minetest.request_shutdown("success")
 	end)
 end)

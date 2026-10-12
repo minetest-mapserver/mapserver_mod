@@ -5,7 +5,7 @@ local planes = {}
 -- added, updated, or removed from game scope
 -- planes deactivated by the game (no players in range, etc) will not be sent to mapserver
 if airutils then
-	minetest.log("info", "[mapserver-bridge] patching airutils functions to track planes")
+	mapserver.log("info", "patching airutils functions to track planes")
 	local au_setText = airutils.setText
 	local au_actfunc = airutils.actfunc
 	local au_save_inv = airutils.save_inventory
@@ -48,7 +48,7 @@ if airutils then
 		end
 	end
 else
-	minetest.log("warning", "[mapserver-bridge] no airutils!")
+	mapserver.log("warning", "no airutils!")
 end
 
 mapserver.bridge.add_airutils_planes = function(data)

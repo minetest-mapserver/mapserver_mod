@@ -8,37 +8,13 @@ dofile(MP .. "/bridge/locator.lua")
 -- mapserver http bridge
 local has_advtrains = minetest.get_modpath("advtrains")
 local has_locator = minetest.get_modpath("locator")
-local has_monitoring = minetest.get_modpath("monitoring")
 
 local has_airutils = minetest.get_modpath("airutils")
 if has_airutils then
 	dofile(MP .. "/bridge/airutils_planes.lua")
 end
 
-local metric_post_size
-local metric_processing_post_time
-local metric_post_time
-
-if has_monitoring then
-	metric_post_size = monitoring.counter(
-		"mapserver_mod_post_size",
-		"size in bytes of post data"
-	)
-	metric_processing_post_time = monitoring.counter(
-		"mapserver_mod_processing_post_time",
-		"time usage in microseconds for processing post data"
-	)
-	metric_post_time = monitoring.counter(
-		"mapserver_mod_post_time",
-		"time usage in microseconds for post data"
-	)
-end
-
-local http, url, key
-
 function send_stats()
-	local t0 = minetest.get_us_time()
-
 	-- data to send to mapserver
 	local data = {}
 

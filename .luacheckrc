@@ -23,6 +23,6 @@ read_globals = {
 	locator = { fields = { "beacons" } },
 
 	-- optional mods
-	"xban", "monitoring", "QoS",
+	"xban", "QoS",
 	"mcl_core", "mcl_sounds", "bones"
 }

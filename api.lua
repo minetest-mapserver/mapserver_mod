@@ -38,4 +38,16 @@ function api.send_nodedefs(nodedefs, callback)
     }, callback)
 end
 
+-- media to mapserver
+function api.send_media(media, callback)
+    minetest.safe_file_write(minetest.get_worldpath() .. "/tmp.json", minetest.write_json(media))
+    http.fetch({
+        url = url .. "/api/luanti/media",
+        extra_headers = extra_headers_auth_json,
+        timeout = 5,
+        post_data = minetest.write_json(media),
+        quiet = true
+    }, callback)
+end
+
 return api
